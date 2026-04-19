@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solas Agency — Lead Generation for Irish Builders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#ffffff;
+  --bg:#f4f4f2;
+  --surface:#ffffff;
+  --border:#dddbd6;
+  --border-strong:#b8b5ae;
+  --ink:#0d0d0c;
+  --ink-2:#2e2d2a;
+  --ink-3:#5f5e58;
+  --gold:#9a6d1e;
+  --gold-bg:#fdf4e8;
+  --gold-border:#dfc28a;
+  --green:#155e3e;
+  --green-bg:#edf7f2;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Plus Jakarta Sans',sans-serif;
+  --sw:240px;
+  --radius:8px;
+}
+html,body{height:100%}
+body{
+  display:flex;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  position:fixed;
+  top:0;left:0;bottom:0;
+  width:var(--sw);
+  background:var(--white);
+  border-right:1.5px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  z-index:100;
+  overflow:hidden;
+}
+.sb-top{
+  padding:2rem 1.75rem 1.5rem;
+  border-bottom:1px solid var(--border);
+}
+.sb-logo{
+  font-family:var(--serif);
+  font-size:1.5rem;
+  font-weight:400;
+  color:var(--ink);
+  letter-spacing:-0.01em;
+  margin-bottom:0.2rem;
+}
+.sb-logo span{color:var(--gold)}
+.sb-tagline{
+  font-size:0.72rem;
+  color:var(--ink-3);
+  font-weight:400;
+  letter-spacing:0.01em;
+}
+.sb-nav{
+  flex:1;
+  padding:1.25rem 1rem;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  overflow-y:auto;
+}
+.sb-label{
+  font-size:0.65rem;
+  font-weight:600;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  padding:0.5rem 0.75rem;
+  margin-top:0.5rem;
+}
+.sb-label:first-child{margin-top:0}
+.nav-btn{
+  display:flex;
+  align-items:center;
+  gap:0.7rem;
+  padding:0.65rem 0.75rem;
+  border-radius:8px;
+  font-size:0.875rem;
+  font-weight:400;
+  color:var(--ink-2);
+  cursor:pointer;
+  transition:all 0.15s;
+  border:none;
+  background:transparent;
+  width:100%;
+  text-align:left;
+}
+.nav-btn:hover{background:var(--bg);color:var(--ink)}
+.nav-btn.active{
+  background:var(--gold-bg);
+  color:var(--gold);
+  font-weight:500;
+}
+.nav-btn.active .nav-icon{opacity:1}
+.nav-icon{
+  width:18px;height:18px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0.4;
+  flex-shrink:0;
+}
+.nav-icon svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.sb-footer{
+  padding:1.25rem 1.75rem;
+  border-top:1px solid var(--border);
+}
+.sb-email{
+  font-size:0.78rem;
+  color:var(--ink-3);
+  text-decoration:none;
+  display:block;
+  margin-bottom:0.25rem;
+  transition:color 0.15s;
+}
+.sb-email:hover{color:var(--gold)}
+.sb-loc{font-size:0.72rem;color:var(--border-strong)}
+
+/* ── MAIN ── */
+.main{
+  margin-left:var(--sw);
+  flex:1;
+  min-height:100vh;
+}
+.page{display:none;min-height:100vh;animation:fadein 0.3s ease both}
+.page.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  background:var(--white);
+  border-bottom:1.5px solid var(--border);
+  padding:3rem 4rem 2.5rem;
+}
+.pg-tag{
+  font-size:0.7rem;
+  font-weight:600;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:0.75rem;
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+}
+.pg-tag::before{content:'';display:block;width:20px;height:1.5px;background:var(--gold);border-radius:2px}
+.pg-h1{
+  font-family:var(--serif);
+  font-size:clamp(2rem,3.5vw,3rem);
+  font-weight:300;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+  color:var(--ink);
+  margin-bottom:0.75rem;
+}
+.pg-h1 em{font-style:italic;color:var(--gold)}
+.pg-sub{
+  font-size:0.95rem;
+  color:var(--ink-3);
+  font-weight:400;
+  max-width:520px;
+  line-height:1.7;
+}
+
+/* ── CONTENT AREA ── */
+.content{padding:2.5rem 4rem 4rem}
+
+/* ── CARDS ── */
+.card{
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.75rem;
+  margin-bottom:1rem;
+  transition:border-color 0.15s,box-shadow 0.15s;
+}
+.card:hover{border-color:var(--border-strong);box-shadow:0 2px 16px rgba(0,0,0,0.06)}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.card-row:last-child{margin-bottom:0}
+
+/* ── STAT CARDS ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.5rem;
+}
+.stat-card.gold{border-color:var(--gold-border);background:var(--gold-bg)}
+.stat-num{
+  font-family:var(--serif);
+  font-size:2.2rem;
+  font-weight:300;
+  color:var(--ink);
+  line-height:1;
+  margin-bottom:0.35rem;
+  letter-spacing:-0.02em;
+}
+.stat-card.gold .stat-num{color:var(--gold)}
+.stat-lbl{font-size:0.78rem;color:var(--ink-3);font-weight:400;line-height:1.4}
+
+/* ── SECTION HEADER ── */
+.sec-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1.25rem;
+}
+.sec-title{
+  font-family:var(--serif);
+  font-size:1.25rem;
+  font-weight:400;
+  color:var(--ink);
+  letter-spacing:-0.01em;
+}
+.sec-title em{font-style:italic;color:var(--gold)}
+
+/* ── ACCORDION ── */
+.accordion{
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:0.75rem;
+}
+.acc-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1.1rem 1.5rem;
+  cursor:pointer;
+  transition:background 0.15s;
+  user-select:none;
+  gap:1rem;
+}
+.acc-header:hover{background:var(--bg)}
+.acc-left{display:flex;align-items:center;gap:1rem}
+.acc-num{
+  font-family:var(--serif);
+  font-size:1rem;
+  font-weight:300;
+  color:var(--gold);
+  font-style:italic;
+  min-width:28px;
+}
+.acc-title{
+  font-size:0.95rem;
+  font-weight:500;
+  color:var(--ink);
+}
+.acc-arrow{
+  width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:transform 0.22s;
+}
+.acc-arrow svg{width:14px;height:14px;stroke:var(--ink-3);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.accordion.open .acc-arrow{transform:rotate(180deg)}
+.acc-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.32s ease;
+}
+.accordion.open .acc-body{max-height:600px}
+.acc-inner{
+  padding:0 1.5rem 1.5rem 3.5rem;
+  border-top:1px solid var(--border);
+}
+.acc-text{
+  font-size:0.875rem;
+  color:var(--ink-2);
+  line-height:1.8;
+  padding-top:1.1rem;
+  margin-bottom:0.75rem;
+}
+.acc-tags{display:flex;gap:0.4rem;flex-wrap:wrap}
+.acc-tag{
+  font-size:0.68rem;
+  font-weight:500;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:0.2rem 0.65rem;
+}
+
+/* ── PROCESS STEPS ── */
+.process-step{
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:1.25rem;
+  padding:1.75rem;
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  margin-bottom:0.75rem;
+  align-items:start;
+  transition:border-color 0.15s;
+}
+.process-step:hover{border-color:var(--border-strong)}
+.step-bubble{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:var(--gold-bg);
+  border:1px solid var(--gold-border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);
+  font-size:1.1rem;
+  font-weight:400;
+  color:var(--gold);
+  font-style:italic;
+  flex-shrink:0;
+}
+.step-title{
+  font-size:0.95rem;
+  font-weight:600;
+  color:var(--ink);
+  margin-bottom:0.4rem;
+}
+.step-desc{
+  font-size:0.875rem;
+  color:var(--ink-3);
+  line-height:1.75;
+  margin-bottom:0.5rem;
+}
+.step-badge{
+  display:inline-block;
+  font-size:0.67rem;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--gold);
+  background:var(--gold-bg);
+  border:1px solid var(--gold-border);
+  border-radius:100px;
+  padding:0.2rem 0.65rem;
+}
+
+/* ── PRICING ── */
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.price-card{
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:2rem;
+  position:relative;
+}
+.price-card.featured{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px var(--gold-bg);
+}
+.feat-pill{
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--gold);
+  color:var(--white);
+  font-size:0.65rem;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  padding:0.3rem 0.9rem;
+  border-radius:100px;
+  white-space:nowrap;
+}
+.price-name{font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1rem}
+.price-amt{
+  font-family:var(--serif);
+  font-size:3rem;
+  font-weight:300;
+  color:var(--ink);
+  line-height:1;
+  letter-spacing:-0.03em;
+  margin-bottom:0.3rem;
+}
+.price-amt sup{font-size:1.1rem;vertical-align:super;font-weight:400}
+.price-period{font-size:0.8rem;color:var(--ink-3);margin-bottom:1.5rem}
+.price-divider{height:1px;background:var(--border);margin-bottom:1.25rem}
+.price-feats{list-style:none;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.75rem}
+.price-feats li{
+  font-size:0.855rem;
+  color:var(--ink-2);
+  display:flex;
+  gap:0.65rem;
+  align-items:flex-start;
+  line-height:1.5;
+}
+.feat-check{
+  width:16px;height:16px;
+  border-radius:50%;
+  background:var(--green-bg);
+  border:1px solid #b3dfc8;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  margin-top:0.1rem;
+}
+.feat-check svg{width:9px;height:9px;stroke:var(--green);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.price-note{
+  font-size:0.75rem;
+  color:var(--ink-3);
+  line-height:1.6;
+  padding-top:1rem;
+  border-top:1px solid var(--border);
+  font-style:italic;
+}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+  font-family:var(--sans);
+  font-size:0.82rem;
+  font-weight:600;
+  letter-spacing:0.02em;
+  padding:0.75rem 1.5rem;
+  border-radius:8px;
+  border:1.5px solid transparent;
+  cursor:pointer;
+  transition:all 0.15s;
+  text-decoration:none;
+  width:100%;
+}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:var(--white)}
+.btn-gold:hover{background:#9a6d24;border-color:#9a6d24}
+.btn-outline{background:transparent;border-color:var(--border-strong);color:var(--ink-2)}
+.btn-outline:hover{border-color:var(--ink);color:var(--ink)}
+.btn-dark{background:var(--ink);border-color:var(--ink);color:var(--white)}
+.btn-dark:hover{background:var(--ink-2)}
+
+/* ── PULL QUOTE ── */
+.blockquote{
+  border-left:3px solid var(--gold);
+  padding:1.25rem 1.5rem;
+  background:var(--gold-bg);
+  border-radius:0 var(--radius) var(--radius) 0;
+  margin:1.25rem 0;
+}
+.blockquote p{
+  font-family:var(--serif);
+  font-size:1.1rem;
+  font-style:italic;
+  font-weight:300;
+  color:var(--ink);
+  line-height:1.55;
+}
+.blockquote cite{
+  display:block;
+  font-size:0.72rem;
+  font-style:normal;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-top:0.6rem;
+}
+
+/* ── INFO ROW ── */
+.info-list{display:flex;flex-direction:column;gap:0}
+.info-item{
+  display:flex;
+  gap:1rem;
+  align-items:flex-start;
+  padding:1rem 0;
+  border-bottom:1px solid var(--border);
+}
+.info-item:last-child{border-bottom:none}
+.info-label{
+  font-size:0.75rem;
+  font-weight:600;
+  color:var(--ink-3);
+  min-width:100px;
+  flex-shrink:0;
+  padding-top:0.1rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+}
+.info-val{font-size:0.875rem;color:var(--ink-2);line-height:1.65}
+
+/* ── TWO COL LAYOUT ── */
+.two-col{display:grid;grid-template-columns:3fr 2fr;gap:2rem;align-items:start}
+.sidebar-widget{
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:0.75rem;
+}
+.widget-header{
+  padding:1rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  font-size:0.78rem;
+  font-weight:600;
+  color:var(--ink);
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+}
+.widget-body{padding:1.25rem}
+.widget-stat{display:flex;justify-content:space-between;align-items:baseline;padding:0.5rem 0;border-bottom:1px solid var(--border)}
+.widget-stat:last-child{border-bottom:none;padding-bottom:0}
+.ws-label{font-size:0.82rem;color:var(--ink-3)}
+.ws-val{font-family:var(--serif);font-size:1.2rem;font-weight:400;color:var(--ink)}
+.ws-val.gold{color:var(--gold)}
+
+/* ── CONTACT FORM ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.field.full{grid-column:1/-1}
+.field label{font-size:0.72rem;font-weight:600;color:var(--ink-2);letter-spacing:0.04em;text-transform:uppercase}
+.field input,.field textarea,.field select{
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:6px;
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:0.9rem;
+  font-weight:400;
+  padding:0.7rem 1rem;
+  outline:none;
+  transition:border-color 0.15s,background 0.15s;
+  width:100%;
+  -webkit-appearance:none;
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--gold);
+  background:var(--white);
+}
+.field input::placeholder,.field textarea::placeholder{color:var(--border-strong)}
+.field textarea{resize:none;min-height:90px}
+
+/* ── ABOUT VALUES ── */
+.values{display:flex;flex-direction:column;gap:0}
+.value{display:grid;grid-template-columns:130px 1fr;gap:1.25rem;padding:1.25rem 0;border-bottom:1px solid var(--border)}
+.value:first-child{padding-top:0}
+.value:last-child{border-bottom:none;padding-bottom:0}
+.v-title{font-size:0.875rem;font-weight:600;color:var(--ink)}
+.v-desc{font-size:0.855rem;color:var(--ink-3);line-height:1.7}
+
+/* ── BENCHMARK ── */
+.bench{
+  background:var(--ink);
+  border-radius:var(--radius);
+  padding:1.75rem;
+  color:var(--white);
+}
+.bench-tag{font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.75rem}
+.bench-q{font-family:var(--serif);font-size:1rem;font-style:italic;font-weight:300;line-height:1.55;color:rgba(255,255,255,0.88);margin-bottom:1.25rem}
+.bench-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,0.1)}
+.bstat-n{font-family:var(--serif);font-size:1.6rem;font-weight:300;color:#e8c87a;line-height:1;margin-bottom:0.2rem}
+.bstat-l{font-size:0.67rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em}
+
+/* ── HOME ── */
+.home-hero{
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:4rem;
+  position:relative;
+  overflow:hidden;
+}
+.home-hero::after{
+  content:'Solas';
+  position:absolute;
+  right:-2rem;top:50%;
+  transform:translateY(-50%);
+  font-family:var(--serif);
+  font-size:16rem;
+  font-weight:300;
+  color:var(--border);
+  line-height:1;
+  pointer-events:none;
+  user-select:none;
+  opacity:0.5;
+}
+.hero-inner{position:relative;z-index:1;max-width:600px}
+.hero-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  font-size:0.72rem;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--gold);
+  background:var(--gold-bg);
+  border:1px solid var(--gold-border);
+  border-radius:100px;
+  padding:0.3rem 0.85rem;
+  margin-bottom:2rem;
+}
+.hero-h1{
+  font-family:var(--serif);
+  font-size:clamp(2.8rem,5vw,4.5rem);
+  font-weight:300;
+  line-height:1.08;
+  letter-spacing:-0.02em;
+  color:var(--ink);
+  margin-bottom:1.5rem;
+}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-body{
+  font-size:1rem;
+  color:var(--ink-3);
+  max-width:460px;
+  line-height:1.75;
+  margin-bottom:2.5rem;
+}
+.hero-btns{display:flex;gap:0.75rem;flex-wrap:wrap}
+.hero-btns .btn{width:auto;padding:0.75rem 1.75rem}
+.home-stats{
+  padding:2rem 4rem;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.hs{
+  padding:1.25rem 2rem 1.25rem 0;
+  border-right:1px solid var(--border);
+  margin-right:2rem;
+}
+.hs:last-child{border-right:none;margin-right:0;padding-right:0}
+.hs-n{
+  font-family:var(--serif);
+  font-size:2rem;
+  font-weight:300;
+  color:var(--ink);
+  line-height:1;
+  margin-bottom:0.3rem;
+  letter-spacing:-0.02em;
+}
+.hs-l{font-size:0.75rem;color:var(--ink-3);font-weight:400;line-height:1.4}
+
+/* ── MOBILE ── */
+.mob-bar{
+  display:none;
+  position:fixed;top:0;left:0;right:0;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:1rem 1.5rem;
+  z-index:200;
+  align-items:center;
+  justify-content:space-between;
+}
+.mob-logo{font-family:var(--serif);font-size:1.3rem;font-weight:400;color:var(--ink)}
+.mob-logo span{color:var(--gold)}
+.hbg{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:4px}
+.hbg span{display:block;width:20px;height:1.5px;background:var(--ink);border-radius:2px;transition:all 0.2s}
+@media(max-width:960px){
+  .sidebar{transform:translateX(-100%);transition:transform 0.25s ease}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,0.1)}
+  .mob-bar{display:flex}
+  .main{margin-left:0;padding-top:58px}
+  .home-hero,.home-stats,.content,.page-header{padding-left:1.5rem;padding-right:1.5rem}
+  .home-stats{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr}
+  .card-row{grid-template-columns:1fr}
+  .home-hero::after{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE BAR -->
+<div class="mob-bar">
+  <div class="mob-logo">Solas<span>.</span></div>
+  <button class="hbg" onclick="toggleSB()"><span></span><span></span><span></span></button>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sb">
+  <div class="sb-top">
+    <div class="sb-logo">Solas<span>.</span></div>
+    <div class="sb-tagline">Lead generation for Irish builders</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-label">Pages</div>
+    <button class="nav-btn active" onclick="go('home',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+      Home
+    </button>
+    <button class="nav-btn" onclick="go('about',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+      About us
+    </button>
+    <button class="nav-btn" onclick="go('services',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+      Services
+    </button>
+    <button class="nav-btn" onclick="go('process',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+      How it works
+    </button>
+    <button class="nav-btn" onclick="go('pricing',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+      Pricing
+    </button>
+    <div class="sb-label">Get started</div>
+    <button class="nav-btn" onclick="go('contact',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+      Contact us
+    </button>
+  </nav>
+  <div class="sb-footer">
+    <a href="mailto:solasagency@proton.me" class="sb-email">solasagency@proton.me</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <div class="hero-inner">
+      <div class="hero-tag">Lead generation for Irish builders</div>
+      <h1 class="hero-h1">Your next job is<br><em>one search away.</em><br>Are they finding you?</h1>
+      <p class="hero-body">We generate quote requests for extension and renovation builders across Ireland through Google Ads and social media. A second pipeline — one you own and control, that works while you are on site.</p>
+      <div class="hero-btns">
+        <button class="btn btn-dark" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button>
+        <button class="btn btn-outline" onclick="go('services',document.querySelectorAll('.nav-btn')[2])">See our services</button>
+      </div>
+    </div>
+  </div>
+  <div class="home-stats">
+    <div class="hs"><div class="hs-n">&euro;60k+</div><div class="hs-l">Average extension job value</div></div>
+    <div class="hs"><div class="hs-n">1 job</div><div class="hs-l">Covers our full annual fee</div></div>
+    <div class="hs"><div class="hs-n">90 days</div><div class="hs-l">To a consistent lead pipeline</div></div>
+  </div>
+  <div class="content">
+    <div class="two-col">
+      <div>
+        <div class="sec-header"><h2 class="sec-title">The problem with <em>word of mouth</em></h2></div>
+        <div class="accordion" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-left">
+              <span class="acc-num">01</span>
+              <span class="acc-title">Your pipeline has a ceiling</span>
+            </div>
+            <span class="acc-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </div>
+          <div class="acc-body"><div class="acc-inner">
+            <p class="acc-text">Word of mouth is powerful, but it is entirely passive. You cannot turn it up in a slow month. One quiet patch — January, post-summer — and the phone stops ringing. A lead generation system that runs independently of referrals removes that vulnerability entirely.</p>
+          </div></div>
+        </div>
+        <div class="accordion" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-left">
+              <span class="acc-num">02</span>
+              <span class="acc-title">Homeowners cannot find you</span>
+            </div>
+            <span class="acc-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </div>
+          <div class="acc-body"><div class="acc-inner">
+            <p class="acc-text">Right now, someone in your area is typing "extension builder" into Google. They are ready to hire. They are not finding you — not because your work is not good, but because you are not visible at the exact moment they are looking. We change that.</p>
+          </div></div>
+        </div>
+        <div class="accordion" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-left">
+              <span class="acc-num">03</span>
+              <span class="acc-title">Your work deserves to be seen</span>
+            </div>
+            <span class="acc-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </div>
+          <div class="acc-body"><div class="acc-inner">
+            <p class="acc-text">You are doing exceptional work on site every week. Almost none of it is visible to the thousands of homeowners in your area who are planning renovations or extensions. Consistent social media content changes that — and builds the trust that gets people to pick up the phone.</p>
+          </div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-widget">
+          <div class="widget-header">Why builders choose Solas</div>
+          <div class="widget-body">
+            <div class="widget-stat"><span class="ws-label">Construction specialists only</span><span class="ws-val gold">Yes</span></div>
+            <div class="widget-stat"><span class="ws-label">Ad spend markups</span><span class="ws-val gold">None</span></div>
+            <div class="widget-stat"><span class="ws-label">Weekly reporting</span><span class="ws-val gold">Always</span></div>
+            <div class="widget-stat"><span class="ws-label">Minimum contract</span><span class="ws-val">3 months</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="page" id="page-about">
+  <div class="page-header">
+    <div class="pg-tag">About Solas</div>
+    <h1 class="pg-h1">Built for builders.<br><em>Nothing else.</em></h1>
+    <p class="pg-sub">A Cork-based agency working exclusively with extension and renovation builders across Ireland.</p>
+  </div>
+  <div class="content">
+    <div class="two-col">
+      <div>
+        <div class="card" style="margin-bottom:1.25rem">
+          <p style="font-size:0.95rem;color:var(--ink-2);line-height:1.8;margin-bottom:1rem">We do not work with restaurants, retailers, or tech companies. We know one market deeply — residential construction — and we build lead generation systems that deliver real quote requests from homeowners.</p>
+          <p style="font-size:0.95rem;color:var(--ink-2);line-height:1.8;margin-bottom:1rem">Most builders have built their businesses entirely on referrals. That works, until it does not. One slow season and the pipeline dries up. We make that vulnerability disappear.</p>
+          <p style="font-size:0.95rem;color:var(--ink-2);line-height:1.8">When you work with Solas you get a direct relationship with someone completely invested in your results. Not a junior account manager across 40 accounts — someone for whom your results are everything.</p>
+        </div>
+        <div class="sec-header"><h2 class="sec-title">What we stand for</h2></div>
+        <div class="card">
+          <div class="values">
+            <div class="value"><div class="v-title">Honest</div><div class="v-desc">We tell you what we can deliver and we deliver it. No inflated promises, no vanity metrics, no hiding behind impressions when your phone is not ringing.</div></div>
+            <div class="value"><div class="v-title">Specific</div><div class="v-desc">Construction lead generation is different from every other industry. We know what Irish homeowners search, what converts in this market, and what does not.</div></div>
+            <div class="value"><div class="v-title">Transparent</div><div class="v-desc">Ad spend goes directly to Google or Meta from your own account. Our fee covers management only. No hidden markups, ever.</div></div>
+            <div class="value"><div class="v-title">Focused</div><div class="v-desc">We do not chase growth for the sake of it. We take on builders we can genuinely help and we do the work properly. Your results are our reputation.</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="blockquote">
+          <p>Word of mouth built your business. It has a ceiling. We remove that ceiling.</p>
+        </div>
+        <div class="sidebar-widget" style="margin-top:1rem">
+          <div class="widget-header">The results builders see</div>
+          <div class="widget-body">
+            <div class="widget-stat"><span class="ws-label">Cost per lead (Google Ads)</span><span class="ws-val gold">&euro;15&ndash;40</span></div>
+            <div class="widget-stat"><span class="ws-label">Average job value (extensions)</span><span class="ws-val">&euro;60k+</span></div>
+            <div class="widget-stat"><span class="ws-label">Leads to generate ROI</span><span class="ws-val gold">1 job</span></div>
+            <div class="widget-stat"><span class="ws-label">Time to first leads</span><span class="ws-val">2 weeks</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SERVICES ═══ -->
+<div class="page" id="page-services">
+  <div class="page-header">
+    <div class="pg-tag">Services</div>
+    <h1 class="pg-h1">Three channels.<br><em>Done properly.</em></h1>
+    <p class="pg-sub">We run three things and we run them well. No upsells, no services you do not need. Just the channels that actually generate quote requests for builders.</p>
+  </div>
+  <div class="content">
+    <div class="two-col">
+      <div>
+        <div class="accordion open" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-left"><span class="acc-num">01</span><span class="acc-title">Google Ads management</span></div>
+            <span class="acc-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </div>
+          <div class="acc-body"><div class="acc-inner">
+            <p class="acc-text">When a homeowner searches for an extension builder in your area, your company appears at the top of Google. We research the right keywords, write the ads, set the budget, and optimise every week based on what is converting into actual calls.</p>
+            <p class="acc-text">You pay Google directly from your own card. We manage the account. Full transparency on every euro spent.</p>
+            <div class="acc-tags"><span class="acc-tag">Search campaigns</span><span class="acc-tag">Keyword research</span><span class="acc-tag">Call tracking</span><span class="acc-tag">Weekly optimisation</span><span class="acc-tag">Conversion reporting</span></div>
+          </div></div>
+        </div>
+        <div class="accordion" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-left"><span class="acc-num">02</span><span class="acc-title">Social media management</span></div>
+            <span class="acc-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </div>
+          <div class="acc-body"><div class="acc-inner">
+            <p class="acc-text">Your project photos turned into consistent, professional content. Before and afters, progress updates, finished project reveals — posted regularly so when someone checks your profile after finding you on Google, they trust what they see and they call.</p>
+            <p class="acc-text">We manage Instagram and Facebook. You WhatsApp us the photos. We handle everything else.</p>
+            <div class="acc-tags"><span class="acc-tag">Instagram</span><span class="acc-tag">Facebook</span><span class="acc-tag">Content calendar</span><span class="acc-tag">Reels</span><span class="acc-tag">Before and afters</span></div>
+          </div></div>
+        </div>
+        <div class="accordion" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-left"><span class="acc-num">03</span><span class="acc-title">Google Business Profile</span></div>
+            <span class="acc-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </div>
+          <div class="acc-body"><div class="acc-inner">
+            <p class="acc-text">The most underused free tool in the construction industry. A fully optimised Google Business listing shows up in local map results when homeowners search for builders nearby. We set it up correctly, upload your work, manage reviews, and keep it updated monthly.</p>
+            <div class="acc-tags"><span class="acc-tag">Local SEO</span><span class="acc-tag">Review strategy</span><span class="acc-tag">Map rankings</span><span class="acc-tag">Monthly updates</span></div>
+          </div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-widget">
+          <div class="widget-header">What we report on</div>
+          <div class="widget-body">
+            <p style="font-size:0.82rem;color:var(--ink-3);line-height:1.65;margin-bottom:1rem">Every week, a plain update with the only numbers that matter. We never report on impressions or follower counts.</p>
+            <div class="widget-stat"><span class="ws-label">Calls generated</span><span class="ws-val">Weekly</span></div>
+            <div class="widget-stat"><span class="ws-label">Cost per lead</span><span class="ws-val">Weekly</span></div>
+            <div class="widget-stat"><span class="ws-label">Ad spend used</span><span class="ws-val">Weekly</span></div>
+            <div class="widget-stat"><span class="ws-label">Lead quality score</span><span class="ws-val">Monthly</span></div>
+          </div>
+        </div>
+        <div class="sidebar-widget">
+          <div class="widget-header">What you never pay for</div>
+          <div class="widget-body">
+            <p style="font-size:0.82rem;color:var(--ink-3);line-height:1.65">Ad spend goes directly from your own card to Google or Meta. Our fee covers management and strategy only. No markups. No surprise charges. You can see every transaction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROCESS ═══ -->
+<div class="page" id="page-process">
+  <div class="page-header">
+    <div class="pg-tag">How it works</div>
+    <h1 class="pg-h1">Simple from day one.<br><em>Consistent from month two.</em></h1>
+    <p class="pg-sub">From your first call to a full pipeline — four clear stages. You stay on site and keep building. We handle everything else.</p>
+  </div>
+  <div class="content">
+    <div class="two-col">
+      <div>
+        <div class="process-step">
+          <div class="step-bubble">1</div>
+          <div>
+            <div class="step-title">Discovery call</div>
+            <div class="step-desc">We learn about your company — where your work currently comes from, what jobs you want more of, which areas you cover. We do not pitch anything until we understand the situation properly. If it is not a fit, we will tell you honestly.</div>
+            <span class="step-badge">15 minutes</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-bubble">2</div>
+          <div>
+            <div class="step-title">Setup and build</div>
+            <div class="step-desc">Google Ads account built from scratch, Google Business Profile fully optimised, social media content calendar created, first ads written and submitted for approval. You send us your best project photos — we handle everything else. No effort required from you in week one.</div>
+            <span class="step-badge">Week one</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-bubble">3</div>
+          <div>
+            <div class="step-title">Leads start arriving</div>
+            <div class="step-desc">From week two onwards, homeowners who found you online start calling. Every lead is tracked — source, date, project type, and outcome. You receive a plain weekly update with the actual numbers. No fluff, no spin.</div>
+            <span class="step-badge">Week two to four</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-bubble">4</div>
+          <div>
+            <div class="step-title">Optimise and scale</div>
+            <div class="step-desc">Each month we review what is converting and cut what is not. The algorithm learns. Cost per lead drops. By month three your pipeline runs independently of referrals — consistently, predictably, every single month.</div>
+            <span class="step-badge">Month two onwards</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-widget">
+          <div class="widget-header">The learning period</div>
+          <div class="widget-body">
+            <p style="font-size:0.82rem;color:var(--ink-3);line-height:1.7;margin-bottom:0.75rem">Google Ads takes roughly two weeks to fully optimise. The algorithm learns which searches convert and adjusts automatically. Week one is setup. Week two is data. Month two is where cost per lead drops.</p>
+            <p style="font-size:0.82rem;color:var(--ink-3);line-height:1.7">This is why we work on a three-month minimum. Anyone promising results in week one is not being straight with you.</p>
+          </div>
+        </div>
+        <div class="sidebar-widget">
+          <div class="widget-header">Your only commitment</div>
+          <div class="widget-body">
+            <p style="font-size:0.82rem;color:var(--ink-3);line-height:1.7">Project photos. WhatsApp them as jobs progress — before, during, after. A few shots a week is enough. We do not need you to manage accounts, write content, or understand how Google Ads works. That is entirely our job.</p>
+          </div>
+        </div>
+        <div class="blockquote">
+          <p>One extra extension job covers our entire annual fee. The second one is pure profit.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRICING ═══ -->
+<div class="page" id="page-pricing">
+  <div class="page-header">
+    <div class="pg-tag">Pricing</div>
+    <h1 class="pg-h1">Clear fees.<br><em>No surprises.</em></h1>
+    <p class="pg-sub">Two clear packages. Ad spend billed directly by Google or Meta to your card — never through us. No hidden fees, no markups.</p>
+  </div>
+  <div class="content">
+    <div class="stats-row" style="margin-bottom:2rem">
+      <div class="stat-card gold"><div class="stat-num">&euro;300</div><div class="stat-lbl">Recommended minimum monthly ad spend — paid direct to Google by you</div></div>
+      <div class="stat-card"><div class="stat-num">3 mo.</div><div class="stat-lbl">Minimum contract — enough time to see real, meaningful results</div></div>
+      <div class="stat-card"><div class="stat-num">&euro;15&ndash;40</div><div class="stat-lbl">Typical cost per qualified lead through Google Ads</div></div>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Starter</div>
+        <div class="price-amt"><sup>&euro;</sup>1,200</div>
+        <div class="price-period">per month &mdash; 3-month minimum</div>
+        <div class="price-divider"></div>
+        <ul class="price-feats">
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Google Ads setup and full management</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Google Business Profile optimisation</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Instagram and Facebook management</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>12 posts per month from your project photos</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Weekly lead report</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Monthly strategy call</li>
+        </ul>
+        <button class="btn btn-outline" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a call</button>
+        <div class="price-note">Ad spend separate &mdash; recommend &euro;300 to &euro;400 per month paid direct to Google. 3-month minimum commitment.</div>
+      </div>
+      <div class="price-card featured">
+        <div class="feat-pill">Most popular</div>
+        <div class="price-name">Growth</div>
+        <div class="price-amt"><sup>&euro;</sup>2,000</div>
+        <div class="price-period">per month &mdash; 3-month minimum</div>
+        <div class="price-divider"></div>
+        <ul class="price-feats">
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Starter</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Google Ads plus Meta Ads combined</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>20 posts per month</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>4 reels or video posts per month</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Lead capture landing page</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Weekly lead report</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Competitor monitoring</li>
+          <li><span class="feat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Weekly check-in call</li>
+        </ul>
+        <button class="btn btn-gold" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a call</button>
+        <div class="price-note">Ad spend separate &mdash; recommend &euro;400 to &euro;800 per month. 3-month minimum commitment.</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:1.25rem">
+      <div class="info-list">
+        <div class="info-item">
+          <span class="info-label">Ad spend</span>
+          <span class="info-val">Always paid directly by you to Google or Meta. We never hold your ad budget. You see every transaction and you can pause at any time.</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Contract</span>
+          <span class="info-val">Three-month minimum. This is the honest minimum time needed to see meaningful results. We do not do month-to-month — it is not enough time to do the job properly.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<div class="page" id="page-contact">
+  <div class="page-header">
+    <div class="pg-tag">Contact</div>
+    <h1 class="pg-h1">Let's talk about<br><em>your pipeline.</em></h1>
+    <p class="pg-sub">Fill in the form and we will come back to you within a few hours to arrange a call. No pitch until we understand your business.</p>
+  </div>
+  <div class="content">
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <form onsubmit="submitForm(event)">
+            <div class="form-grid">
+              <div class="field"><label>Your name</label><input type="text" placeholder="John Murphy" required></div>
+              <div class="field"><label>Company name</label><input type="text" placeholder="Murphy Construction"></div>
+              <div class="field"><label>Phone number</label><input type="tel" placeholder="087 000 0000"></div>
+              <div class="field">
+                <label>County</label>
+                <select>
+                  <option value="">Select county</option>
+                  <option>Cork</option><option>Dublin</option><option>Galway</option>
+                  <option>Limerick</option><option>Waterford</option><option>Kilkenny</option>
+                  <option>Tipperary</option><option>Clare</option><option>Kildare</option>
+                  <option>Wicklow</option><option>Wexford</option><option>Other</option>
+                </select>
+              </div>
+              <div class="field full"><label>How do you currently get most of your work?</label><textarea placeholder="Word of mouth, referrals, Donedeal..."></textarea></div>
+              <div class="field full"><label>What kind of jobs are you looking for more of?</label><textarea placeholder="Extensions, renovations, new builds..."></textarea></div>
+            </div>
+            <div style="margin-top:0.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+              <button type="submit" class="btn btn-dark" style="width:auto;padding:0.75rem 2rem">Send message</button>
+              <span id="form-ok" style="display:none;font-size:0.82rem;color:var(--green);font-weight:500">Sent. We will be in touch within a few hours.</span>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-widget">
+          <div class="widget-header">Direct contact</div>
+          <div class="widget-body">
+            <div class="info-list">
+              <div class="info-item" style="padding:0.75rem 0">
+                <span class="info-label">Email</span>
+                <a href="mailto:solasagency@proton.me" style="font-size:0.875rem;color:var(--gold);text-decoration:none">solasagency@proton.me</a>
+              </div>
+              <div class="info-item" style="padding:0.75rem 0">
+                <span class="info-label">Instagram</span>
+                <a href="#" style="font-size:0.875rem;color:var(--ink-2);text-decoration:none">@solasagency</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-widget">
+          <div class="widget-header">What happens next</div>
+          <div class="widget-body">
+            <div class="info-list">
+              <div class="info-item" style="padding:0.75rem 0">
+                <span class="info-label" style="min-width:70px">Step 1</span>
+                <span style="font-size:0.855rem;color:var(--ink-3);line-height:1.65">We review your message — usually within a few hours on weekdays.</span>
+              </div>
+              <div class="info-item" style="padding:0.75rem 0">
+                <span class="info-label" style="min-width:70px">Step 2</span>
+                <span style="font-size:0.855rem;color:var(--ink-3);line-height:1.65">A 15-minute call to learn about your business. No pitch until we understand the situation.</span>
+              </div>
+              <div class="info-item" style="padding:0.75rem 0;border:none">
+                <span class="info-label" style="min-width:70px">Step 3</span>
+                <span style="font-size:0.855rem;color:var(--ink-3);line-height:1.65">A clear, one-page proposal specific to your company. No obligation, no pressure.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function go(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  window.scrollTo(0, 0);
+  if (window.innerWidth <= 960) document.getElementById('sb').classList.remove('open');
+}
+function toggleSB() {
+  document.getElementById('sb').classList.toggle('open');
+}
+function toggleAcc(el) {
+  el.classList.toggle('open');
+}
+function submitForm(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  setTimeout(() => {
+    btn.textContent = 'Sent';
+    document.getElementById('form-ok').style.display = 'inline';
+  }, 600);
+}
+</script>
+</body>
+</html>
