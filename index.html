@@ -4,11 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-<title>Solas Agency — Lead Generation for Irish Builders & Tradesmen</title>
+<title>Solas Agency — Lead Generation for Irish Tradesmen</title>
 <link rel="canonical" href="https://solasagency.ie/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- HTTPS redirect handled by GitHub Pages -->
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -22,244 +21,425 @@
   --gold:#9a6d1e;
   --gold-lt:#fdf4e8;
   --gold-bd:#dfc28a;
+  --gold-glow:rgba(154,109,30,0.35);
   --green:#155e3e;
   --green-bg:#edf7f2;
   --serif:'Fraunces',Georgia,serif;
   --sans:'Plus Jakarta Sans',sans-serif;
   --sw:240px;
   --r:8px;
+  --ease:cubic-bezier(0.16,1,0.3,1);
 }
-html,body{height:100%}
-body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
 
-/* ─── SIDEBAR ─── */
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:var(--white);border-right:1.5px solid var(--border);display:flex;flex-direction:column;z-index:100}
+html,body{height:100%}
+body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ══ CURSOR ══ */
+.cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,width .3s var(--ease),height .3s var(--ease),opacity .3s;mix-blend-mode:multiply}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .15s var(--ease),width .4s var(--ease),height .4s var(--ease),opacity .3s,border-color .3s;opacity:.5}
+body:hover .cursor{opacity:1}
+.cursor.expand{width:48px;height:48px;opacity:.15}
+.cursor-ring.expand{width:60px;height:60px;border-color:var(--gold);opacity:.8}
+
+/* ══ PAGE TRANSITION OVERLAY ══ */
+.transition-overlay{position:fixed;inset:0;background:var(--ink);z-index:500;transform:scaleY(0);transform-origin:bottom;pointer-events:none}
+.transition-overlay.in{animation:overlayIn .45s var(--ease) forwards}
+.transition-overlay.out{animation:overlayOut .45s var(--ease) forwards}
+@keyframes overlayIn{from{transform:scaleY(0);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+@keyframes overlayOut{from{transform:scaleY(1);transform-origin:top}to{transform:scaleY(0);transform-origin:top}}
+
+/* ══ SIDEBAR ══ */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:var(--white);border-right:1.5px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform .4s var(--ease)}
 .sb-top{padding:2rem 1.75rem 1.5rem;border-bottom:1px solid var(--border)}
-.sb-logo{font-family:var(--serif);font-size:1.5rem;font-weight:400;color:var(--ink);letter-spacing:-0.01em;margin-bottom:.15rem}
+.sb-logo{font-family:var(--serif);font-size:1.5rem;font-weight:400;color:var(--ink);letter-spacing:-.01em;margin-bottom:.15rem;cursor:pointer;transition:color .2s}
+.sb-logo:hover{color:var(--gold)}
 .sb-logo span{color:var(--gold)}
 .sb-tag{font-size:.7rem;color:var(--ink-3)}
 .sb-nav{flex:1;padding:1.25rem 1rem;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
 .sb-section{font-size:.63rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:.5rem .75rem;margin-top:.5rem}
 .sb-section:first-child{margin-top:0}
-.nav-btn{display:flex;align-items:center;gap:.7rem;padding:.65rem .75rem;border-radius:var(--r);font-size:.875rem;font-weight:400;color:var(--ink-2);cursor:pointer;transition:all .15s;border:none;background:transparent;width:100%;text-align:left}
-.nav-btn:hover{background:var(--bg);color:var(--ink)}
+
+/* ══ NAV BUTTONS ══ */
+.nav-btn{
+  display:flex;align-items:center;gap:.7rem;padding:.65rem .75rem;
+  border-radius:var(--r);font-size:.875rem;font-weight:400;color:var(--ink-2);
+  cursor:pointer;border:none;background:transparent;width:100%;text-align:left;
+  position:relative;overflow:hidden;transition:color .2s;
+}
+.nav-btn::before{
+  content:'';position:absolute;inset:0;background:var(--bg);
+  border-radius:var(--r);transform:scaleX(0);transform-origin:left;
+  transition:transform .25s var(--ease);z-index:-1;
+}
+.nav-btn:hover::before{transform:scaleX(1)}
+.nav-btn:hover{color:var(--ink)}
 .nav-btn.active{background:var(--gold-lt);color:var(--gold);font-weight:500}
 .nav-btn.active .ni{opacity:1}
-.ni{width:18px;height:18px;display:flex;align-items:center;justify-content:center;opacity:.4;flex-shrink:0}
+.nav-btn .ripple{position:absolute;border-radius:50%;background:rgba(154,109,30,.2);transform:scale(0);animation:ripple .6s linear;pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+.ni{width:18px;height:18px;display:flex;align-items:center;justify-content:center;opacity:.4;flex-shrink:0;transition:opacity .2s,transform .2s}
+.nav-btn:hover .ni,.nav-btn.active .ni{opacity:1;transform:scale(1.1)}
 .ni svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
 .sb-foot{padding:1.25rem 1.75rem;border-top:1px solid var(--border)}
-.sb-email{font-size:.78rem;color:var(--ink-3);text-decoration:none;display:block;margin-bottom:.75rem;transition:color .15s}
-.sb-email:hover{color:var(--gold)}
-.sb-cta-btn{display:block;width:100%;padding:.7rem 1rem;background:var(--gold);color:var(--white);font-family:var(--sans);font-size:.78rem;font-weight:600;text-align:center;border:none;border-radius:6px;cursor:pointer;transition:background .15s}
-.sb-cta-btn:hover{background:#b07e22}
+.sb-email{font-size:.78rem;color:var(--ink-3);text-decoration:none;display:block;margin-bottom:.75rem;transition:color .2s,letter-spacing .2s}
+.sb-email:hover{color:var(--gold);letter-spacing:.01em}
 
-/* ─── MAIN ─── */
+/* ══ CINEMATIC BUTTON ══ */
+.sb-cta-btn{
+  display:block;width:100%;padding:.7rem 1rem;
+  background:var(--gold);color:var(--white);
+  font-family:var(--sans);font-size:.78rem;font-weight:600;
+  text-align:center;border:none;border-radius:6px;cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease);
+}
+.sb-cta-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);
+  transform:translateX(-100%);transition:transform .5s var(--ease);
+}
+.sb-cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--gold-glow)}
+.sb-cta-btn:hover::after{transform:translateX(100%)}
+.sb-cta-btn:active{transform:translateY(0);box-shadow:none}
+
+/* ══ MAIN ══ */
 .main{margin-left:var(--sw);flex:1;min-height:100vh}
-.page{display:none;min-height:100vh;animation:fi .3s ease both}
-.page.active{display:flex;flex-direction:column}
-@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.page{display:none;min-height:100vh;flex-direction:column}
+.page.active{display:flex}
 
-/* ─── HERO ─── */
-.hero{background:var(--ink);padding:5rem 4rem 4.5rem;position:relative;overflow:hidden;min-height:500px;display:flex;align-items:center}
-.hero::before{content:'';position:absolute;right:-80px;top:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(154,109,30,.15) 0%,transparent 65%);pointer-events:none}
-.hero::after{content:'Solas';position:absolute;right:-1rem;bottom:-4rem;font-family:var(--serif);font-size:20rem;font-weight:300;color:rgba(255,255,255,.03);line-height:1;pointer-events:none;user-select:none}
+/* ══ HERO ══ */
+.hero{
+  background:var(--ink);padding:5rem 4rem 4.5rem;
+  position:relative;overflow:hidden;min-height:520px;display:flex;align-items:center;
+}
+.hero-bg-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(154,109,30,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(154,109,30,.06) 1px,transparent 1px);
+  background-size:60px 60px;
+  animation:gridMove 20s linear infinite;
+}
+@keyframes gridMove{from{background-position:0 0}to{background-position:60px 60px}}
+.hero-glow{
+  position:absolute;right:-100px;top:-100px;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(154,109,30,.18) 0%,transparent 65%);
+  animation:glowPulse 4s ease-in-out infinite;pointer-events:none;
+}
+@keyframes glowPulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:1}}
+.hero::after{content:'Solas';position:absolute;right:-1rem;bottom:-4rem;font-family:var(--serif);font-size:20rem;font-weight:300;color:rgba(255,255,255,.025);line-height:1;pointer-events:none;user-select:none}
 .hero-inner{position:relative;z-index:1;max-width:620px}
-.hero-pill{display:inline-flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);background:rgba(154,109,30,.15);border:1px solid rgba(154,109,30,.3);border-radius:100px;padding:.28rem .85rem;margin-bottom:1.75rem}
+
+/* Hero pill — animated border */
+.hero-pill{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);border-radius:100px;padding:.28rem .85rem;margin-bottom:1.75rem;
+  position:relative;
+  background:rgba(154,109,30,.12);
+}
+.hero-pill::before{
+  content:'';position:absolute;inset:0;border-radius:100px;
+  background:linear-gradient(90deg,rgba(154,109,30,.4),rgba(154,109,30,.1),rgba(154,109,30,.4));
+  background-size:200% 100%;animation:shimmer 2.5s linear infinite;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;padding:1px;
+}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+
+/* Hero headline stagger */
 .hero-h1{font-family:var(--serif);font-size:clamp(3rem,5vw,4.8rem);font-weight:300;line-height:1.04;letter-spacing:-.02em;color:var(--white);margin-bottom:1.4rem}
 .hero-h1 em{font-style:italic;color:var(--gold)}
-.hero-body{font-size:1.05rem;color:rgba(255,255,255,.55);max-width:500px;line-height:1.75;margin-bottom:2.5rem}
-.hero-btns{display:flex;gap:.75rem;flex-wrap:wrap}
-.hero-btns .btn{width:auto;padding:.8rem 1.75rem}
-.btn-hero{background:var(--gold);border:1.5px solid var(--gold);color:var(--white)}
-.btn-hero:hover{background:#b07e22;border-color:#b07e22}
-.btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75)}
-.btn-ghost:hover{border-color:rgba(255,255,255,.45);color:var(--white)}
+.hero-h1 .word{display:inline-block;opacity:0;transform:translateY(30px);animation:wordIn .7s var(--ease) forwards}
+.hero-body{font-size:1.05rem;color:rgba(255,255,255,.55);max-width:500px;line-height:1.75;margin-bottom:2.5rem;opacity:0;animation:fadeUp .7s var(--ease) .6s forwards}
+.hero-btns{display:flex;gap:.75rem;flex-wrap:wrap;opacity:0;animation:fadeUp .7s var(--ease) .8s forwards}
+@keyframes wordIn{to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
 
-/* ─── TRUST BAR ─── */
+/* ══ CINEMATIC BUTTONS ══ */
+.hero-btns .btn{width:auto;padding:.85rem 2rem}
+
+.btn-primary{
+  background:var(--gold);border:none;color:var(--white);
+  position:relative;overflow:hidden;
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease);
+}
+.btn-primary::before{
+  content:'';position:absolute;top:50%;left:50%;
+  width:0;height:0;background:rgba(255,255,255,.2);border-radius:50%;
+  transform:translate(-50%,-50%);transition:width .5s var(--ease),height .5s var(--ease);
+}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 32px var(--gold-glow)}
+.btn-primary:hover::before{width:300px;height:300px}
+.btn-primary:active{transform:translateY(-1px) scale(1)}
+
+.btn-ghost{
+  background:transparent;border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.75);
+  position:relative;overflow:hidden;transition:all .3s var(--ease);
+}
+.btn-ghost::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,.06);
+  transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease);
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);color:var(--white)}
+.btn-ghost:hover::after{transform:scaleX(1)}
+
+/* ══ TRUST BAR ══ */
 .trust-bar{background:var(--gold-lt);border-bottom:1.5px solid var(--gold-bd);padding:1.1rem 4rem;display:flex;align-items:center;gap:2.5rem;flex-wrap:wrap;flex-shrink:0}
-.trust-item{display:flex;align-items:center;gap:.5rem;font-size:.76rem;font-weight:500;color:var(--ink-2)}
+.trust-item{display:flex;align-items:center;gap:.5rem;font-size:.76rem;font-weight:500;color:var(--ink-2);transition:color .2s,transform .2s var(--ease)}
+.trust-item:hover{color:var(--gold);transform:translateX(3px)}
 .trust-item svg{width:13px;height:13px;stroke:var(--gold);stroke-width:2.5;fill:none;flex-shrink:0}
 
-/* ─── HOME STATS ─── */
+/* ══ HOME STATS ══ */
 .home-stats{padding:2.5rem 4rem;display:grid;grid-template-columns:repeat(3,1fr);background:var(--white);border-bottom:1.5px solid var(--border);flex-shrink:0}
 .hs{padding-right:2rem;border-right:1px solid var(--border);margin-right:2rem}
 .hs:last-child{border-right:none;margin-right:0;padding-right:0}
-.hs-n{font-family:var(--serif);font-size:2.2rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:.3rem;letter-spacing:-.02em}
+.hs-n{font-family:var(--serif);font-size:2.2rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:.3rem;letter-spacing:-.02em;transition:transform .3s var(--ease)}
+.hs:hover .hs-n{transform:scale(1.05)}
 .hs-l{font-size:.76rem;color:var(--ink-3);line-height:1.4}
 
-/* ─── PROBLEM STRIP — dark ─── */
+/* ══ PROBLEM STRIP ══ */
 .problem-strip{background:var(--ink);padding:3.5rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;flex-shrink:0}
 .ps-tag{font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
 .ps-h{font-family:var(--serif);font-size:2rem;font-weight:300;line-height:1.18;color:var(--white);margin-bottom:1.1rem;letter-spacing:-.01em}
 .ps-h em{font-style:italic;color:var(--gold)}
 .ps-body{font-size:.88rem;color:rgba(255,255,255,.45);line-height:1.8}
 .ps-points{display:flex;flex-direction:column;gap:.85rem}
-.ps-point{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-left:2px solid var(--gold);padding:1rem 1.2rem;border-radius:0 6px 6px 0}
+.ps-point{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-left:2px solid var(--gold);padding:1rem 1.2rem;border-radius:0 6px 6px 0;
+  transition:background .25s,border-left-color .25s,transform .25s var(--ease);
+  cursor:default;
+}
+.ps-point:hover{background:rgba(255,255,255,.07);border-left-color:#c49a3a;transform:translateX(4px)}
 .ps-pt{font-size:.875rem;font-weight:600;color:var(--white);margin-bottom:.25rem}
 .ps-pb{font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.65}
 
-/* ─── SERVICES HOME STRIP ─── */
+/* ══ SERVICE CARDS ══ */
 .svc-strip{padding:3rem 4rem;background:var(--bg);border-bottom:1.5px solid var(--border);flex-shrink:0}
 .strip-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.75rem}
 .strip-h{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:var(--ink);letter-spacing:-.01em}
 .strip-h em{font-style:italic;color:var(--gold)}
 .strip-label{font-size:.66rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 .svc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.svc-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:1.75rem;transition:border-color .15s,box-shadow .15s}
-.svc-card:hover{border-color:var(--border-strong);box-shadow:0 2px 14px rgba(0,0,0,.06)}
-.svc-num{font-family:var(--serif);font-size:.9rem;font-style:italic;color:var(--gold);margin-bottom:.9rem}
+
+.svc-card{
+  background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);
+  padding:1.75rem;position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s var(--ease),box-shadow .3s var(--ease);
+  cursor:default;
+}
+.svc-card::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),#c49a3a);
+  transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease);
+}
+.svc-card:hover{border-color:var(--gold-bd);transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1)}
+.svc-card:hover::before{transform:scaleX(1)}
+.svc-num{font-family:var(--serif);font-size:.9rem;font-style:italic;color:var(--gold);margin-bottom:.9rem;transition:letter-spacing .2s}
+.svc-card:hover .svc-num{letter-spacing:.05em}
 .svc-title{font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:.65rem}
 .svc-body{font-size:.84rem;color:var(--ink-3);line-height:1.75;margin-bottom:.9rem}
 .svc-tags{display:flex;flex-wrap:wrap;gap:.35rem}
-.svc-tag{font-size:.63rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--border);border-radius:100px;padding:.17rem .6rem}
+.svc-tag{font-size:.63rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--border);border-radius:100px;padding:.17rem .6rem;transition:background .2s,color .2s,border-color .2s}
+.svc-card:hover .svc-tag{border-color:var(--gold-bd);color:var(--gold);background:var(--gold-lt)}
 
-/* ─── PAGE HEADER ─── */
+/* ══ SCROLL REVEAL ══ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+
+/* ══ PAGE HEADER ══ */
 .page-header{background:var(--white);border-bottom:1.5px solid var(--border);padding:3rem 4rem 2.5rem;flex-shrink:0}
 .pg-tag{font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;display:flex;align-items:center;gap:.6rem}
-.pg-tag::before{content:'';display:block;width:20px;height:1.5px;background:var(--gold);border-radius:2px}
+.pg-tag::before{content:'';display:block;width:20px;height:1.5px;background:var(--gold);border-radius:2px;transition:width .3s var(--ease)}
+.page-header:hover .pg-tag::before{width:35px}
 .pg-h1{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);font-weight:300;line-height:1.1;letter-spacing:-.02em;color:var(--ink);margin-bottom:.75rem}
 .pg-h1 em{font-style:italic;color:var(--gold)}
 .pg-sub{font-size:.94rem;color:var(--ink-3);max-width:520px;line-height:1.7}
 
-/* ─── CONTENT ─── */
+/* ══ CONTENT ══ */
 .content{padding:2.5rem 4rem 4rem;flex:1}
 
-/* ─── FOUNDER ─── */
+/* ══ FOUNDER ══ */
 .founder-strip{background:var(--white);border-bottom:1.5px solid var(--border);padding:2.75rem 4rem;display:grid;grid-template-columns:auto 1fr;gap:2.5rem;align-items:center;flex-shrink:0}
-.founder-av{width:82px;height:82px;border-radius:50%;background:var(--gold-lt);border:2px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.8rem;font-weight:300;color:var(--gold);font-style:italic;flex-shrink:0}
+.founder-av{width:82px;height:82px;border-radius:50%;background:var(--gold-lt);border:2px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.8rem;font-weight:300;color:var(--gold);font-style:italic;flex-shrink:0;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.founder-strip:hover .founder-av{transform:scale(1.05);box-shadow:0 0 0 6px var(--gold-lt)}
 .founder-name{font-family:var(--serif);font-size:1.35rem;font-weight:400;color:var(--ink);letter-spacing:-.01em;margin-bottom:.1rem}
 .founder-role{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
 .founder-bio{font-size:.875rem;color:var(--ink-3);line-height:1.8;max-width:580px}
 
-/* ─── CARDS ─── */
-.card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:1.75rem;margin-bottom:1rem;transition:border-color .15s,box-shadow .15s}
-.card:hover{border-color:var(--border-strong);box-shadow:0 2px 14px rgba(0,0,0,.06)}
+/* ══ CARDS ══ */
+.card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:1.75rem;margin-bottom:1rem;transition:border-color .2s,box-shadow .2s,transform .2s var(--ease)}
+.card:hover{border-color:var(--border-strong);box-shadow:0 4px 20px rgba(0,0,0,.07);transform:translateY(-2px)}
 
-/* ─── ACCORDION ─── */
-.accordion{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.75rem}
+/* ══ ACCORDION ══ */
+.accordion{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.75rem;transition:border-color .2s,box-shadow .2s}
+.accordion:hover{border-color:var(--border-strong)}
+.accordion.open{border-color:var(--gold-bd);box-shadow:0 4px 20px rgba(154,109,30,.08)}
 .acc-head{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;cursor:pointer;transition:background .15s;user-select:none;gap:1rem}
 .acc-head:hover{background:var(--bg)}
 .acc-left{display:flex;align-items:center;gap:1rem}
-.acc-num{font-family:var(--serif);font-size:1rem;font-weight:300;color:var(--gold);font-style:italic;min-width:28px}
+.acc-num{font-family:var(--serif);font-size:1rem;font-weight:300;color:var(--gold);font-style:italic;min-width:28px;transition:transform .2s}
+.accordion.open .acc-num{transform:scale(1.1)}
 .acc-title{font-size:.95rem;font-weight:500;color:var(--ink)}
-.acc-arr{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .22s}
+.acc-arr{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .35s var(--ease),background .2s;border-radius:50%;background:var(--bg)}
 .acc-arr svg{width:14px;height:14px;stroke:var(--ink-3);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.accordion.open .acc-arr{transform:rotate(180deg)}
-.acc-body{max-height:0;overflow:hidden;transition:max-height .32s ease}
+.accordion.open .acc-arr{transform:rotate(180deg);background:var(--gold-lt)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .45s var(--ease)}
 .accordion.open .acc-body{max-height:600px}
 .acc-inner{padding:0 1.5rem 1.5rem 3.5rem;border-top:1px solid var(--border)}
 .acc-text{font-size:.875rem;color:var(--ink-2);line-height:1.8;padding-top:1.1rem;margin-bottom:.75rem}
 .acc-tags{display:flex;gap:.4rem;flex-wrap:wrap}
-.acc-tag{font-size:.65rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--border);border-radius:100px;padding:.18rem .6rem}
+.acc-tag{font-size:.65rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--border);border-radius:100px;padding:.18rem .6rem;transition:all .2s}
+.acc-tag:hover{background:var(--gold-lt);border-color:var(--gold-bd);color:var(--gold)}
 
-/* ─── PROCESS ─── */
-.step{display:grid;grid-template-columns:48px 1fr;gap:1.25rem;padding:1.75rem;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:.75rem;align-items:start;transition:border-color .15s}
-.step:hover{border-color:var(--border-strong)}
-.step-bub{width:44px;height:44px;border-radius:50%;background:var(--gold-lt);border:1px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--gold);font-style:italic;flex-shrink:0}
+/* ══ PROCESS STEPS ══ */
+.step{display:grid;grid-template-columns:48px 1fr;gap:1.25rem;padding:1.75rem;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:.75rem;align-items:start;transition:all .3s var(--ease);position:relative;overflow:hidden}
+.step::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease)}
+.step:hover{border-color:var(--gold-bd);transform:translateX(6px);box-shadow:0 4px 20px rgba(154,109,30,.1)}
+.step:hover::after{transform:scaleY(1)}
+.step-bub{width:44px;height:44px;border-radius:50%;background:var(--gold-lt);border:1px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--gold);font-style:italic;flex-shrink:0;transition:transform .3s var(--ease),box-shadow .3s}
+.step:hover .step-bub{transform:scale(1.1);box-shadow:0 0 0 4px var(--gold-lt)}
 .step-title{font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:.4rem}
 .step-desc{font-size:.875rem;color:var(--ink-3);line-height:1.75;margin-bottom:.5rem}
 .step-badge{display:inline-block;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:100px;padding:.18rem .65rem}
 
-/* ─── PRICING ─── */
+/* ══ PRICING ══ */
 .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
-.price-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:2rem;position:relative}
+.price-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:2rem;position:relative;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+.price-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1)}
 .price-card.featured{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-lt)}
+.price-card.featured:hover{box-shadow:0 0 0 3px var(--gold-lt),0 16px 40px var(--gold-glow)}
 .feat-pill{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--white);font-size:.63rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .9rem;border-radius:100px;white-space:nowrap}
 .price-name{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1rem}
-.price-amt{font-family:var(--serif);font-size:3rem;font-weight:300;color:var(--ink);line-height:1;letter-spacing:-.03em;margin-bottom:.3rem}
+.price-amt{font-family:var(--serif);font-size:3rem;font-weight:300;color:var(--ink);line-height:1;letter-spacing:-.03em;margin-bottom:.3rem;transition:color .2s}
+.price-card:hover .price-amt{color:var(--gold)}
 .price-amt sup{font-size:1.1rem;vertical-align:super;font-weight:400}
 .price-period{font-size:.8rem;color:var(--ink-3);margin-bottom:1.5rem}
 .price-div{height:1px;background:var(--border);margin-bottom:1.25rem}
 .price-feats{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem}
 .price-feats li{font-size:.855rem;color:var(--ink-2);display:flex;gap:.65rem;align-items:flex-start;line-height:1.5}
-.feat-ck{width:16px;height:16px;border-radius:50%;background:var(--green-bg);border:1px solid #b3dfc8;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+.feat-ck{width:16px;height:16px;border-radius:50%;background:var(--green-bg);border:1px solid #b3dfc8;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;transition:transform .2s var(--ease)}
+.price-feats li:hover .feat-ck{transform:scale(1.2)}
 .feat-ck svg{width:9px;height:9px;stroke:var(--green);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .price-note{font-size:.73rem;color:var(--ink-3);line-height:1.6;padding-top:1rem;border-top:1px solid var(--border);font-style:italic}
 
-/* ─── BUTTONS ─── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--sans);font-size:.82rem;font-weight:600;letter-spacing:.02em;padding:.75rem 1.5rem;border-radius:var(--r);border:1.5px solid transparent;cursor:pointer;transition:all .15s;text-decoration:none;width:100%}
+/* ══ ALL BUTTONS ══ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  font-family:var(--sans);font-size:.82rem;font-weight:600;letter-spacing:.02em;
+  padding:.75rem 1.5rem;border-radius:var(--r);border:1.5px solid transparent;
+  cursor:pointer;text-decoration:none;width:100%;
+  position:relative;overflow:hidden;
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .2s,border-color .2s,color .2s;
+}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.18) 50%,transparent 70%);transform:translateX(-200%);transition:transform .5s var(--ease)}
+.btn:hover::after{transform:translateX(200%)}
 .btn-gold{background:var(--gold);border-color:var(--gold);color:var(--white)}
-.btn-gold:hover{background:#b07e22;border-color:#b07e22}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--gold-glow)}
+.btn-gold:active{transform:translateY(0)}
 .btn-outline{background:transparent;border-color:var(--border-strong);color:var(--ink-2)}
-.btn-outline:hover{border-color:var(--ink);color:var(--ink)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
 .btn-dark{background:var(--ink);border-color:var(--ink);color:var(--white)}
-.btn-dark:hover{background:var(--ink-2)}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(13,13,12,.25)}
 
-/* ─── TWO COL ─── */
+/* ══ TWO COL ══ */
 .two-col{display:grid;grid-template-columns:3fr 2fr;gap:2rem;align-items:start}
-.widget{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.75rem}
+.widget{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.75rem;transition:border-color .2s,box-shadow .2s}
+.widget:hover{border-color:var(--border-strong);box-shadow:0 4px 16px rgba(0,0,0,.06)}
 .widget-head{padding:1rem 1.25rem;border-bottom:1px solid var(--border);font-size:.76rem;font-weight:600;color:var(--ink);letter-spacing:.04em;text-transform:uppercase}
 .widget-body{padding:1.25rem}
-.wstat{display:flex;justify-content:space-between;align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--border)}
-.wstat:last-child{border-bottom:none;padding-bottom:0}
+.wstat{display:flex;justify-content:space-between;align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--border);transition:background .15s;margin:0 -.5rem;padding-left:.5rem;padding-right:.5rem;border-radius:4px}
+.wstat:last-child{border-bottom:none}
+.wstat:hover{background:var(--bg)}
 .ws-l{font-size:.82rem;color:var(--ink-3)}
 .ws-v{font-family:var(--serif);font-size:1.2rem;font-weight:400;color:var(--ink)}
 .ws-v.gold{color:var(--gold)}
 
-/* ─── STATS ROW ─── */
+/* ══ STATS ROW ══ */
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
-.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+.stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.08);border-color:var(--border-strong)}
 .stat-card.gold{border-color:var(--gold-bd);background:var(--gold-lt)}
+.stat-card.gold:hover{box-shadow:0 8px 24px var(--gold-glow)}
 .stat-num{font-family:var(--serif);font-size:2.2rem;font-weight:300;line-height:1;margin-bottom:.3rem;letter-spacing:-.02em}
 .stat-card.gold .stat-num{color:var(--gold)}
 .stat-lbl{font-size:.76rem;color:var(--ink-3);line-height:1.4}
 
-/* ─── BLOCKQUOTE ─── */
-.bq{border-left:3px solid var(--gold);padding:1.25rem 1.5rem;background:var(--gold-lt);border-radius:0 var(--r) var(--r) 0;margin:1.25rem 0}
+/* ══ BLOCKQUOTE ══ */
+.bq{border-left:3px solid var(--gold);padding:1.25rem 1.5rem;background:var(--gold-lt);border-radius:0 var(--r) var(--r) 0;margin:1.25rem 0;transition:border-left-width .2s,transform .2s var(--ease)}
+.bq:hover{border-left-width:5px;transform:translateX(3px)}
 .bq p{font-family:var(--serif);font-size:1.1rem;font-style:italic;font-weight:300;color:var(--ink);line-height:1.55}
 
-/* ─── INFO LIST ─── */
+/* ══ INFO LIST ══ */
 .info-list{display:flex;flex-direction:column}
-.info-item{display:flex;gap:1rem;align-items:flex-start;padding:1rem 0;border-bottom:1px solid var(--border)}
+.info-item{display:flex;gap:1rem;align-items:flex-start;padding:1rem 0;border-bottom:1px solid var(--border);transition:background .15s;margin:0 -.25rem;padding-left:.25rem;padding-right:.25rem;border-radius:4px}
 .info-item:last-child{border-bottom:none}
+.info-item:hover{background:var(--bg)}
 .info-label{font-size:.73rem;font-weight:600;color:var(--ink-3);min-width:100px;flex-shrink:0;padding-top:.1rem;text-transform:uppercase;letter-spacing:.06em}
 .info-val{font-size:.875rem;color:var(--ink-2);line-height:1.65}
 
-/* ─── CONTACT FORM ─── */
+/* ══ CONTACT FORM ══ */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.75rem}
 .field.full{grid-column:1/-1}
-.field label{font-size:.7rem;font-weight:600;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase}
-.field input,.field textarea,.field select{background:var(--bg);border:1.5px solid var(--border);border-radius:6px;color:var(--ink);font-family:var(--sans);font-size:.9rem;font-weight:400;padding:.7rem 1rem;outline:none;transition:border-color .15s,background .15s;width:100%;-webkit-appearance:none}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold);background:var(--white)}
+.field label{font-size:.7rem;font-weight:600;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase;transition:color .2s}
+.field:focus-within label{color:var(--gold)}
+.field input,.field textarea,.field select{
+  background:var(--bg);border:1.5px solid var(--border);border-radius:6px;
+  color:var(--ink);font-family:var(--sans);font-size:.9rem;font-weight:400;
+  padding:.7rem 1rem;outline:none;transition:border-color .2s,background .2s,box-shadow .2s;width:100%;-webkit-appearance:none;
+}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold);background:var(--white);box-shadow:0 0 0 3px var(--gold-lt)}
 .field input::placeholder,.field textarea::placeholder{color:var(--border-strong)}
 .field textarea{resize:none;min-height:90px}
-.form-success{display:none;background:var(--green-bg);border:1.5px solid #b3dfc8;border-radius:var(--r);padding:1.25rem 1.5rem;font-size:.875rem;color:var(--green);margin-top:1rem}
+.form-success{display:none;background:var(--green-bg);border:1.5px solid #b3dfc8;border-radius:var(--r);padding:1.25rem 1.5rem;font-size:.875rem;color:var(--green);margin-top:1rem;animation:fadeUp .5s var(--ease)}
 
-/* ─── VALUES ─── */
+/* ══ VALUES ══ */
 .values{display:flex;flex-direction:column}
-.value{display:grid;grid-template-columns:120px 1fr;gap:1.25rem;padding:1.25rem 0;border-bottom:1px solid var(--border)}
+.value{display:grid;grid-template-columns:120px 1fr;gap:1.25rem;padding:1.25rem 0;border-bottom:1px solid var(--border);transition:transform .2s var(--ease)}
 .value:first-child{padding-top:0}
 .value:last-child{border-bottom:none;padding-bottom:0}
+.value:hover{transform:translateX(4px)}
 .v-title{font-size:.875rem;font-weight:600;color:var(--ink)}
 .v-desc{font-size:.855rem;color:var(--ink-3);line-height:1.7}
 
-/* ─── FOOTER ─── */
+/* ══ FOOTER ══ */
 .site-footer{background:var(--ink);padding:3rem 4rem 2.25rem;flex-shrink:0;margin-top:auto}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;padding-bottom:2.25rem;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:1.75rem}
-.footer-logo{font-family:var(--serif);font-size:1.5rem;font-weight:400;color:var(--white);margin-bottom:.4rem}
+.footer-logo{font-family:var(--serif);font-size:1.5rem;font-weight:400;color:var(--white);margin-bottom:.4rem;transition:color .2s;cursor:pointer}
+.footer-logo:hover{color:var(--gold)}
 .footer-logo span{color:var(--gold)}
 .footer-tagline{font-size:.78rem;color:rgba(255,255,255,.35);margin-bottom:1.25rem;line-height:1.6}
-.footer-contact-link{display:block;font-size:.82rem;color:var(--gold);text-decoration:none;margin-bottom:.4rem;transition:color .15s}
-.footer-contact-link:hover{color:#c49a3a}
+.footer-contact-link{display:block;font-size:.82rem;color:var(--gold);text-decoration:none;margin-bottom:.4rem;transition:color .2s,letter-spacing .2s}
+.footer-contact-link:hover{color:#c49a3a;letter-spacing:.01em}
 .footer-heading{font-size:.63rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:1rem}
 .footer-nav{display:flex;flex-direction:column;gap:.5rem}
-.footer-nav button{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.84rem;color:rgba(255,255,255,.5);text-align:left;padding:0;transition:color .15s}
-.footer-nav button:hover{color:var(--white)}
+.footer-nav button{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.84rem;color:rgba(255,255,255,.5);text-align:left;padding:0;transition:color .2s,transform .2s var(--ease)}
+.footer-nav button:hover{color:var(--white);transform:translateX(4px)}
 .footer-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .footer-copy{font-size:.73rem;color:rgba(255,255,255,.22)}
-.footer-ig{font-size:.73rem;color:rgba(255,255,255,.35);text-decoration:none;transition:color .15s}
+.footer-ig{font-size:.73rem;color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s}
 .footer-ig:hover{color:var(--white)}
 
-/* ─── MOBILE BAR ─── */
+/* ══ MOBILE BAR ══ */
 .mob-bar{display:none;position:fixed;top:0;left:0;right:0;background:var(--white);border-bottom:1px solid var(--border);padding:1rem 1.5rem;z-index:200;align-items:center;justify-content:space-between}
 .mob-logo{font-family:var(--serif);font-size:1.3rem;font-weight:400;color:var(--ink)}
 .mob-logo span{color:var(--gold)}
-.hbg{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:4px}
-.hbg span{display:block;width:20px;height:1.5px;background:var(--ink);border-radius:2px}
+.hbg{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:4px;transition:transform .2s}
+.hbg:hover{transform:scale(1.1)}
+.hbg span{display:block;width:20px;height:1.5px;background:var(--ink);border-radius:2px;transition:transform .3s var(--ease),opacity .3s}
+
+/* ══ ANIMATED COUNTER ══ */
+.counter{display:inline-block}
 
 @media(max-width:960px){
-  .sidebar{transform:translateX(-100%);transition:transform .25s ease}
+  .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.1)}
   .mob-bar{display:flex}
   .main{margin-left:0;padding-top:58px}
@@ -271,10 +451,18 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
   .footer-grid{grid-template-columns:1fr}
   .founder-strip{grid-template-columns:1fr}
   .hero::after{display:none}
+  .cursor,.cursor-ring{display:none}
 }
 </style>
 </head>
 <body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- PAGE TRANSITION -->
+<div class="transition-overlay" id="overlay"></div>
 
 <!-- MOBILE BAR -->
 <div class="mob-bar">
@@ -285,7 +473,7 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sb">
   <div class="sb-top">
-    <div class="sb-logo">Solas<span>.</span></div>
+    <div class="sb-logo" onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Solas<span>.</span></div>
     <div class="sb-tag">Lead generation for Irish tradesmen</div>
   </div>
   <nav class="sb-nav">
@@ -311,7 +499,7 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
     </button>
   </nav>
   <div class="sb-foot">
-    <a href="mailto:kieran@solasagency.ie" class="sb-email">kieran@solasagency.ie</a>
+    
     <button class="sb-cta-btn" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call →</button>
   </div>
 </aside>
@@ -319,23 +507,26 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
 <!-- MAIN -->
 <main class="main">
 
-<!-- ══════════ HOME ══════════ -->
+<!-- ══════ HOME ══════ -->
 <div class="page active" id="page-home">
-
-  <!-- HERO — dark & bold -->
   <div class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-glow"></div>
     <div class="hero-inner">
       <div class="hero-pill">Lead generation for Irish tradesmen</div>
-      <h1 class="hero-h1">The phone stops<br>ringing when you<br>stop being <em>found.</em></h1>
-      <p class="hero-body">We get builders, renovation companies and tradesmen across Ireland in front of homeowners who are actively searching on Google right now — so enquiries keep coming in whether you're on site or not.</p>
+      <h1 class="hero-h1">
+        <span class="word" style="animation-delay:.1s">The phone stops</span><br>
+        <span class="word" style="animation-delay:.25s">ringing when you</span><br>
+        <span class="word" style="animation-delay:.4s">stop being <em>found.</em></span>
+      </h1>
+      <p class="hero-body">We get tradesmen across Ireland in front of people who are actively searching for their service on Google right now — so enquiries keep coming in whether you're on the tools or not.</p>
       <div class="hero-btns">
-        <button class="btn btn-hero" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free 15-minute call</button>
+        <button class="btn btn-primary" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free 15-minute call</button>
         <button class="btn btn-ghost" onclick="go('services',document.querySelectorAll('.nav-btn')[2])">See what we do →</button>
       </div>
     </div>
   </div>
 
-  <!-- TRUST BAR -->
   <div class="trust-bar">
     <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Ad spend paid directly by you to Google</div>
     <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Plain weekly report — real numbers only</div>
@@ -343,56 +534,44 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
     <div class="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>No pitch until we understand your business</div>
   </div>
 
-  <!-- STATS -->
   <div class="home-stats">
-    <div class="hs"><div class="hs-n">€60k+</div><div class="hs-l">Average value of an extension or renovation job in Ireland</div></div>
-    <div class="hs"><div class="hs-n">€15–40</div><div class="hs-l">Typical cost per qualified enquiry through Google Ads</div></div>
-    <div class="hs"><div class="hs-n">1 job</div><div class="hs-l">That's all it takes to cover the full cost of a month with us</div></div>
+    <div class="hs reveal"><div class="hs-n">9 in 10</div><div class="hs-l">Tradesmen rely on word of mouth alone — with no control over when the next job comes in</div></div>
+    <div class="hs reveal" style="transition-delay:.1s"><div class="hs-n">€15–40</div><div class="hs-l">Typical cost per qualified enquiry through Google Ads for trades businesses</div></div>
+    <div class="hs reveal" style="transition-delay:.2s"><div class="hs-n">1 job</div><div class="hs-l">That's all it takes to cover the full cost of a month with us — for any trade</div></div>
   </div>
 
-  <!-- PROBLEM — dark contrast section -->
   <div class="problem-strip">
-    <div>
+    <div class="reveal-left">
       <div class="ps-tag">The problem</div>
       <h2 class="ps-h">Word of mouth built your business.<br><em>It has a ceiling.</em></h2>
-      <p class="ps-body">Referrals are great when they come in. The problem is you have no control over when that is. One slow January and the pipeline dries up completely — and there's nothing you can do about it.</p>
+      <p class="ps-body">Referrals are great when they come in. The problem is you have no control over when that is. One slow January and the pipeline dries up — and there's nothing you can do about it.</p>
     </div>
-    <div class="ps-points">
-      <div class="ps-point">
-        <div class="ps-pt">No control over timing</div>
-        <div class="ps-pb">Referrals come in when they come in. You can't turn them up when things go quiet.</div>
-      </div>
-      <div class="ps-point">
-        <div class="ps-pt">Invisible to active searchers</div>
-        <div class="ps-pb">Right now, homeowners in your area are typing "extension builder near me" into Google. If you're not there, your competitors are taking those calls.</div>
-      </div>
-      <div class="ps-point">
-        <div class="ps-pt">No backup pipeline</div>
-        <div class="ps-pb">When work slows down you're starting from scratch. We make that completely avoidable.</div>
-      </div>
+    <div class="ps-points reveal-right">
+      <div class="ps-point"><div class="ps-pt">No control over timing</div><div class="ps-pb">Referrals come in when they come in. You can't turn them up when things go quiet.</div></div>
+      <div class="ps-point"><div class="ps-pt">Invisible to active searchers</div><div class="ps-pb">Right now, someone in your area is typing your trade into Google. They have money to spend and they are ready to hire. If you're not there, your competitors are taking that call.</div></div>
+      <div class="ps-point"><div class="ps-pt">No backup pipeline</div><div class="ps-pb">When work slows down you're starting from scratch. We make that completely avoidable.</div></div>
     </div>
   </div>
 
-  <!-- SERVICES PREVIEW -->
   <div class="svc-strip">
-    <div class="strip-header">
+    <div class="strip-header reveal">
       <h2 class="strip-h">What we <em>actually</em> do</h2>
       <span class="strip-label">Three services. Done properly.</span>
     </div>
     <div class="svc-cards">
-      <div class="svc-card">
+      <div class="svc-card reveal" style="transition-delay:.05s">
         <div class="svc-num">01</div>
         <div class="svc-title">Google Ads</div>
-        <div class="svc-body">Your name at the top of Google when someone in your area searches for a builder right now. We build it, write it and manage it every week. Your card pays Google directly — we never touch your budget.</div>
+        <div class="svc-body">Your name at the top of Google when someone in your area searches for your trade right now. We build it, write it and manage it every week. Your card pays Google directly — we never touch your budget.</div>
         <div class="svc-tags"><span class="svc-tag">Search</span><span class="svc-tag">Call tracking</span><span class="svc-tag">Weekly report</span></div>
       </div>
-      <div class="svc-card">
+      <div class="svc-card reveal" style="transition-delay:.15s">
         <div class="svc-num">02</div>
         <div class="svc-title">Social Media</div>
         <div class="svc-body">Your project photos turned into consistent content on Instagram and Facebook. You send us the photos via WhatsApp. We handle everything else — every single month.</div>
         <div class="svc-tags"><span class="svc-tag">Instagram</span><span class="svc-tag">Facebook</span><span class="svc-tag">12+ posts/mo</span></div>
       </div>
-      <div class="svc-card">
+      <div class="svc-card reveal" style="transition-delay:.25s">
         <div class="svc-num">03</div>
         <div class="svc-title">Google Business Profile</div>
         <div class="svc-body">The most underused free tool in construction. A properly set up listing puts you on the map when homeowners search locally. We set it up, optimise it and keep it active.</div>
@@ -401,73 +580,41 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="footer-grid">
-      <div>
-        <div class="footer-logo">Solas<span>.</span></div>
-        <div class="footer-tagline">Lead generation for Irish builders and tradesmen.<br>Google Ads, Social Media & Google Business Profile.</div>
-        <a href="mailto:kieran@solasagency.ie" class="footer-contact-link">kieran@solasagency.ie</a>
-        <a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-contact-link">@solasagency</a>
-      </div>
-      <div>
-        <div class="footer-heading">Pages</div>
-        <div class="footer-nav">
-          <button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button>
-          <button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button>
-          <button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button>
-          <button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button>
-          <button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button>
-        </div>
-      </div>
-      <div>
-        <div class="footer-heading">Get started</div>
-        <div class="footer-nav">
-          <button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button>
-          <button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Contact us</button>
-        </div>
-        <div style="margin-top:1.5rem">
-          <div class="footer-heading">Follow us</div>
-          <a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-ig">Instagram — @solasagency</a>
-        </div>
-      </div>
+      <div><div class="footer-logo" onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.<br>Google Ads, Social Media & Google Business Profile.</div></div>
+      <div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div>
+      <div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Contact us</button></div><div style="margin-top:1.5rem"><div class="footer-heading">Follow</div></div></div>
     </div>
-    <div class="footer-bottom">
-      <div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div>
-      <a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-ig">@solasagency on Instagram</a>
-    </div>
+    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div></div>
   </footer>
-
 </div>
 
-<!-- ══════════ ABOUT ══════════ -->
+<!-- ══════ ABOUT ══════ -->
 <div class="page" id="page-about">
   <div class="page-header">
     <div class="pg-tag">About</div>
     <h1 class="pg-h1">Built for tradesmen.<br><em>Not for everyone.</em></h1>
-    <p class="pg-sub">We work specifically with builders, renovation companies and tradesmen across Ireland. One industry, done properly.</p>
+    <p class="pg-sub">We work specifically with tradesmen across Ireland — builders, landscapers, plumbers, electricians, roofers and more. One focus, done properly.</p>
   </div>
-
-  <!-- FOUNDER SECTION -->
   <div class="founder-strip">
     <div class="founder-av">K</div>
     <div>
       <div class="founder-name">Kieran Morrissey</div>
       <div class="founder-role">Founder, Solas Agency</div>
-      <p class="founder-bio">I started Solas because I kept seeing the same thing — builders doing brilliant work, getting great results for their clients, and being completely invisible online. The homeowners looking for them couldn't find them. The referrals were great until they weren't. I built Solas to fix that. We work exclusively with tradesmen and construction companies across Ireland. When you work with us, you deal directly with me — not a junior account manager handling 40 other clients.</p>
+      <p class="founder-bio">I started Solas because I kept seeing the same thing — tradesmen doing brilliant work, getting great results for their clients, and being completely invisible online. The people looking for them couldn't find them. The referrals were great until they weren't. I built Solas to fix that. We work exclusively with tradesmen across Ireland. When you work with us, you deal directly with me — not a junior account manager handling 40 other accounts.</p>
     </div>
   </div>
-
   <div class="content">
     <div class="two-col">
       <div>
-        <div class="card" style="margin-bottom:1.25rem">
+        <div class="card reveal">
           <p style="font-size:.94rem;color:var(--ink-2);line-height:1.8;margin-bottom:1rem">We don't work with restaurants, retailers or tech companies. We know one market deeply — residential construction and trades — and we build lead generation systems that deliver real enquiries from homeowners who are ready to hire.</p>
-          <p style="font-size:.94rem;color:var(--ink-2);line-height:1.8;margin-bottom:1rem">Most builders have built their businesses entirely on referrals. That works, until it doesn't. One slow season and the pipeline dries up. We make that vulnerability disappear by giving you a second source of enquiries you actually control.</p>
+          <p style="font-size:.94rem;color:var(--ink-2);line-height:1.8;margin-bottom:1rem">Most tradesmen have built their businesses entirely on referrals and repeat clients. That works, until it doesn't. One slow period and the pipeline dries up. We make that vulnerability disappear by giving you a second source of enquiries you actually control.</p>
           <p style="font-size:.94rem;color:var(--ink-2);line-height:1.8">When you work with Solas you deal directly with someone completely invested in your results. Not a junior account manager spread across dozens of accounts.</p>
         </div>
-        <h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:400;color:var(--ink);margin-bottom:1rem">What we stand for</h2>
-        <div class="card">
+        <h2 style="font-family:var(--serif);font-size:1.2rem;font-weight:400;color:var(--ink);margin-bottom:1rem" class="reveal">What we stand for</h2>
+        <div class="card reveal">
           <div class="values">
             <div class="value"><div class="v-title">Honest</div><div class="v-desc">We tell you what we can deliver and we deliver it. No inflated promises, no vanity metrics, no hiding behind impressions when your phone isn't ringing.</div></div>
             <div class="value"><div class="v-title">Specific</div><div class="v-desc">Construction lead generation is different from every other industry. We know what Irish homeowners search, what converts in this market, and what doesn't.</div></div>
@@ -477,12 +624,12 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
         </div>
       </div>
       <div>
-        <div class="bq"><p>Word of mouth built your business. It has a ceiling. We remove that ceiling.</p></div>
-        <div class="widget" style="margin-top:1rem">
+        <div class="bq reveal"><p>Word of mouth built your business. It has a ceiling. We remove that ceiling.</p></div>
+        <div class="widget reveal" style="margin-top:1rem">
           <div class="widget-head">The numbers that matter</div>
           <div class="widget-body">
             <div class="wstat"><span class="ws-l">Cost per lead (Google Ads)</span><span class="ws-v gold">€15–40</span></div>
-            <div class="wstat"><span class="ws-l">Average extension job value</span><span class="ws-v">€60k+</span></div>
+            <div class="wstat"><span class="ws-l">Tradesmen relying solely on word of mouth</span><span class="ws-v gold">9 in 10</span></div>
             <div class="wstat"><span class="ws-l">Jobs to cover our monthly fee</span><span class="ws-v gold">1 job</span></div>
             <div class="wstat"><span class="ws-l">Time to first enquiries</span><span class="ws-v">~2 weeks</span></div>
           </div>
@@ -490,44 +637,13 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
       </div>
     </div>
   </div>
-
   <footer class="site-footer">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-logo">Solas<span>.</span></div>
-        <div class="footer-tagline">Lead generation for Irish builders and tradesmen.<br>Google Ads, Social Media & Google Business Profile.</div>
-        <a href="mailto:kieran@solasagency.ie" class="footer-contact-link">kieran@solasagency.ie</a>
-        <a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-contact-link">@solasagency</a>
-      </div>
-      <div>
-        <div class="footer-heading">Pages</div>
-        <div class="footer-nav">
-          <button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button>
-          <button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button>
-          <button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button>
-          <button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button>
-          <button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button>
-        </div>
-      </div>
-      <div>
-        <div class="footer-heading">Get started</div>
-        <div class="footer-nav">
-          <button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button>
-        </div>
-        <div style="margin-top:1.5rem">
-          <div class="footer-heading">Follow</div>
-          <a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-ig">@solasagency</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div>
-      <a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-ig">@solasagency on Instagram</a>
-    </div>
+    <div class="footer-grid"><div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div></div><div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div><div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div></div>
+    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div></div>
   </footer>
 </div>
 
-<!-- ══════════ SERVICES ══════════ -->
+<!-- ══════ SERVICES ══════ -->
 <div class="page" id="page-services">
   <div class="page-header">
     <div class="pg-tag">Services</div>
@@ -537,32 +653,32 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
   <div class="content">
     <div class="two-col">
       <div>
-        <div class="accordion open" onclick="toggleAcc(this)">
+        <div class="accordion open reveal" onclick="toggleAcc(this)">
           <div class="acc-head"><div class="acc-left"><span class="acc-num">01</span><span class="acc-title">Google Ads management</span></div><span class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           <div class="acc-body"><div class="acc-inner">
-            <p class="acc-text">When a homeowner searches for a builder or tradesman in your area, your company appears at the top of Google. We research the right keywords, write the ads, set the budget, and optimise every week based on what's actually converting into calls.</p>
-            <p class="acc-text">You pay Google directly from your own card. We manage the account. Full transparency on every euro spent — you can see every transaction at any time.</p>
+            <p class="acc-text">When someone searches for your trade in your area, your company appears at the top of Google. We research the right keywords, write the ads, set the budget, and optimise every week based on what's converting into calls.</p>
+            <p class="acc-text">You pay Google directly from your own card. Full transparency on every euro spent — you can see every transaction at any time.</p>
             <div class="acc-tags"><span class="acc-tag">Search campaigns</span><span class="acc-tag">Keyword research</span><span class="acc-tag">Call tracking</span><span class="acc-tag">Weekly optimisation</span><span class="acc-tag">Conversion reporting</span></div>
           </div></div>
         </div>
-        <div class="accordion" onclick="toggleAcc(this)">
+        <div class="accordion reveal" style="transition-delay:.1s" onclick="toggleAcc(this)">
           <div class="acc-head"><div class="acc-left"><span class="acc-num">02</span><span class="acc-title">Social media management</span></div><span class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           <div class="acc-body"><div class="acc-inner">
-            <p class="acc-text">Your project photos turned into consistent, professional content. Before and afters, progress updates, finished project reveals — posted regularly so when someone checks your profile after finding you on Google, they trust what they see and they call.</p>
+            <p class="acc-text">Your project photos turned into consistent, professional content. Posted regularly so when someone checks your profile after finding you on Google, they trust what they see and they call.</p>
             <p class="acc-text">We manage Instagram and Facebook. You send us photos via WhatsApp. We handle captions, hashtags, scheduling and everything else.</p>
             <div class="acc-tags"><span class="acc-tag">Instagram</span><span class="acc-tag">Facebook</span><span class="acc-tag">Content calendar</span><span class="acc-tag">Reels</span><span class="acc-tag">Before and afters</span></div>
           </div></div>
         </div>
-        <div class="accordion" onclick="toggleAcc(this)">
+        <div class="accordion reveal" style="transition-delay:.2s" onclick="toggleAcc(this)">
           <div class="acc-head"><div class="acc-left"><span class="acc-num">03</span><span class="acc-title">Google Business Profile</span></div><span class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span></div>
           <div class="acc-body"><div class="acc-inner">
-            <p class="acc-text">The most underused free tool in the construction industry. A fully optimised Google Business listing shows up in local map results when homeowners search for tradesmen nearby. We set it up correctly, upload your work, manage reviews, and keep it updated every month.</p>
+            <p class="acc-text">The most underused free tool in the construction industry. A fully optimised Google Business listing shows up in local map results when homeowners search for tradesmen nearby. We set it up, upload your work, manage reviews, and keep it updated every month.</p>
             <div class="acc-tags"><span class="acc-tag">Local SEO</span><span class="acc-tag">Review strategy</span><span class="acc-tag">Map rankings</span><span class="acc-tag">Monthly updates</span></div>
           </div></div>
         </div>
       </div>
       <div>
-        <div class="widget">
+        <div class="widget reveal">
           <div class="widget-head">What we report on</div>
           <div class="widget-body">
             <p style="font-size:.82rem;color:var(--ink-3);line-height:1.65;margin-bottom:1rem">Every week, a plain update with the only numbers that matter. We never report on impressions or follower counts.</p>
@@ -572,75 +688,49 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
             <div class="wstat"><span class="ws-l">Lead quality</span><span class="ws-v">Monthly</span></div>
           </div>
         </div>
-        <div class="widget">
+        <div class="widget reveal" style="transition-delay:.1s">
           <div class="widget-head">What you never pay for</div>
-          <div class="widget-body"><p style="font-size:.82rem;color:var(--ink-3);line-height:1.65">Ad spend goes directly from your own card to Google or Meta. Our fee covers management and strategy only. No markups. No surprise charges. You can see every transaction.</p></div>
+          <div class="widget-body"><p style="font-size:.82rem;color:var(--ink-3);line-height:1.65">Ad spend goes directly from your own card to Google or Meta. Our fee covers management and strategy only. No markups. No surprise charges.</p></div>
         </div>
-        <div class="bq"><p>One extra extension job covers our entire annual fee. The second one is pure profit.</p></div>
+        <div class="bq reveal" style="transition-delay:.2s"><p>One extra extension job covers our entire annual fee. The second one is pure profit.</p></div>
       </div>
     </div>
   </div>
   <footer class="site-footer">
-    <div class="footer-grid">
-      <div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div><a href="mailto:kieran@solasagency.ie" class="footer-contact-link">kieran@solasagency.ie</a></div>
-      <div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div>
-      <div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div>
-    </div>
-    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div><a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-ig">@solasagency</a></div>
+    <div class="footer-grid"><div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div></div><div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div><div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div></div>
+    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div></div>
   </footer>
 </div>
 
-<!-- ══════════ PROCESS ══════════ -->
+<!-- ══════ PROCESS ══════ -->
 <div class="page" id="page-process">
   <div class="page-header">
     <div class="pg-tag">How it works</div>
     <h1 class="pg-h1">Simple from day one.<br><em>Consistent from month two.</em></h1>
-    <p class="pg-sub">From your first call to a full pipeline — four clear stages. You stay on site and keep building. We handle everything else.</p>
+    <p class="pg-sub">From your first call to a full pipeline — four clear stages. You stay on site. We handle everything else.</p>
   </div>
   <div class="content">
     <div class="two-col">
       <div>
-        <div class="step">
-          <div class="step-bub">1</div>
-          <div><div class="step-title">Quick chat</div><div class="step-desc">We learn about your business — where your work comes from, what jobs you want more of, which areas you cover. We don't pitch anything until we understand the situation properly. If it's not a fit, we'll tell you honestly.</div><span class="step-badge">15 minutes</span></div>
-        </div>
-        <div class="step">
-          <div class="step-bub">2</div>
-          <div><div class="step-title">We set it all up</div><div class="step-desc">Google Ads account built from scratch, Google Business Profile fully optimised, social media content calendar created, first ads written and live. You send us your best project photos — we handle everything else. Minimal effort from you in week one.</div><span class="step-badge">Week one</span></div>
-        </div>
-        <div class="step">
-          <div class="step-bub">3</div>
-          <div><div class="step-title">Enquiries start coming in</div><div class="step-desc">From week two onwards, homeowners who found you online start calling. Every lead is tracked. You receive a plain weekly update with the real numbers — calls, cost per lead, ad spend used. No fluff, no spin.</div><span class="step-badge">Week two to four</span></div>
-        </div>
-        <div class="step">
-          <div class="step-bub">4</div>
-          <div><div class="step-title">We keep improving it</div><div class="step-desc">Each month we review what's converting and cut what isn't. The algorithm learns. Cost per lead drops. By month three your pipeline runs consistently, independently of referrals — every single month.</div><span class="step-badge">Month two onwards</span></div>
-        </div>
+        <div class="step reveal"><div class="step-bub">1</div><div><div class="step-title">Quick chat</div><div class="step-desc">We learn about your business — where your work comes from, what jobs you want more of, which areas you cover. We don't pitch anything until we understand the situation. If it's not a fit, we'll tell you honestly.</div><span class="step-badge">15 minutes</span></div></div>
+        <div class="step reveal" style="transition-delay:.1s"><div class="step-bub">2</div><div><div class="step-title">We set it all up</div><div class="step-desc">Google Ads account built from scratch, Google Business Profile fully optimised, social media content calendar created, first ads written and live. You send us your best project photos — we handle everything else.</div><span class="step-badge">Week one</span></div></div>
+        <div class="step reveal" style="transition-delay:.2s"><div class="step-bub">3</div><div><div class="step-title">Enquiries start coming in</div><div class="step-desc">From week two onwards, homeowners who found you online start calling. Every lead is tracked. You receive a plain weekly update with the real numbers — calls, cost per lead, ad spend used.</div><span class="step-badge">Week two to four</span></div></div>
+        <div class="step reveal" style="transition-delay:.3s"><div class="step-bub">4</div><div><div class="step-title">We keep improving it</div><div class="step-desc">Each month we review what's converting and cut what isn't. The algorithm learns. Cost per lead drops. By month three your pipeline runs consistently, every single month.</div><span class="step-badge">Month two onwards</span></div></div>
       </div>
       <div>
-        <div class="widget">
-          <div class="widget-head">The learning period</div>
-          <div class="widget-body"><p style="font-size:.82rem;color:var(--ink-3);line-height:1.7;margin-bottom:.75rem">Google Ads takes roughly two weeks to fully optimise. The algorithm learns which searches convert and adjusts automatically. Week one is setup. Week two is data. Month two is where cost per lead drops.</p><p style="font-size:.82rem;color:var(--ink-3);line-height:1.7">This is why we work on a three-month minimum. Anyone promising results in week one is not being straight with you.</p></div>
-        </div>
-        <div class="widget">
-          <div class="widget-head">Your only commitment</div>
-          <div class="widget-body"><p style="font-size:.82rem;color:var(--ink-3);line-height:1.7">Project photos. WhatsApp them as jobs progress — before, during, after. A few shots a week is enough. We don't need you to manage accounts, write content, or understand how Google Ads works. That's entirely our job.</p></div>
-        </div>
-        <div class="bq"><p>One extra extension job covers our entire annual fee. The second one is pure profit.</p></div>
+        <div class="widget reveal"><div class="widget-head">The learning period</div><div class="widget-body"><p style="font-size:.82rem;color:var(--ink-3);line-height:1.7;margin-bottom:.75rem">Google Ads takes roughly two weeks to fully optimise. The algorithm learns which searches convert and adjusts automatically. Month two is where cost per lead drops.</p><p style="font-size:.82rem;color:var(--ink-3);line-height:1.7">This is why we work on a three-month minimum. Anyone promising results in week one is not being straight with you.</p></div></div>
+        <div class="widget reveal" style="transition-delay:.1s"><div class="widget-head">Your only commitment</div><div class="widget-body"><p style="font-size:.82rem;color:var(--ink-3);line-height:1.7">Project photos. WhatsApp them as jobs progress — before, during, after. A few shots a week is enough. We don't need you to manage accounts, write content, or understand how Google Ads works. That's entirely our job.</p></div></div>
+        <div class="bq reveal" style="transition-delay:.2s"><p>One extra extension job covers our entire annual fee. The second one is pure profit.</p></div>
       </div>
     </div>
   </div>
   <footer class="site-footer">
-    <div class="footer-grid">
-      <div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div><a href="mailto:kieran@solasagency.ie" class="footer-contact-link">kieran@solasagency.ie</a></div>
-      <div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div>
-      <div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div>
-    </div>
-    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div><a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-ig">@solasagency</a></div>
+    <div class="footer-grid"><div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div></div><div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div><div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div></div>
+    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div></div>
   </footer>
 </div>
 
-<!-- ══════════ PRICING ══════════ -->
+<!-- ══════ PRICING ══════ -->
 <div class="page" id="page-pricing">
   <div class="page-header">
     <div class="pg-tag">Pricing</div>
@@ -649,12 +739,12 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
   </div>
   <div class="content">
     <div class="stats-row" style="margin-bottom:2rem">
-      <div class="stat-card gold"><div class="stat-num">€300</div><div class="stat-lbl">Recommended minimum monthly ad spend — paid direct to Google by you</div></div>
-      <div class="stat-card"><div class="stat-num">3 mo.</div><div class="stat-lbl">Minimum contract — enough time to see real, meaningful results</div></div>
-      <div class="stat-card"><div class="stat-num">€15–40</div><div class="stat-lbl">Typical cost per qualified lead through Google Ads</div></div>
+      <div class="stat-card gold reveal"><div class="stat-num">€300</div><div class="stat-lbl">Recommended minimum monthly ad spend — paid direct to Google by you</div></div>
+      <div class="stat-card reveal" style="transition-delay:.1s"><div class="stat-num">3 mo.</div><div class="stat-lbl">Minimum contract — enough time to see real, meaningful results</div></div>
+      <div class="stat-card reveal" style="transition-delay:.2s"><div class="stat-num">€15–40</div><div class="stat-lbl">Typical cost per qualified lead through Google Ads</div></div>
     </div>
     <div class="pricing-grid">
-      <div class="price-card">
+      <div class="price-card reveal">
         <div class="price-name">Starter</div>
         <div class="price-amt"><sup>€</sup>1,200</div>
         <div class="price-period">per month &mdash; 3-month minimum</div>
@@ -668,9 +758,9 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
           <li><span class="feat-ck"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Monthly strategy call</li>
         </ul>
         <button class="btn btn-outline" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a call</button>
-        <div class="price-note">Ad spend separate — recommend €300 to €400 per month paid direct to Google. 3-month minimum.</div>
+        <div class="price-note">Ad spend separate — recommend €300–400/mo paid direct to Google. 3-month minimum.</div>
       </div>
-      <div class="price-card featured">
+      <div class="price-card featured reveal" style="transition-delay:.15s">
         <div class="feat-pill">Most popular</div>
         <div class="price-name">Growth</div>
         <div class="price-amt"><sup>€</sup>2,000</div>
@@ -687,10 +777,10 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
           <li><span class="feat-ck"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>Weekly check-in call</li>
         </ul>
         <button class="btn btn-gold" onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a call</button>
-        <div class="price-note">Ad spend separate — recommend €400 to €800 per month. 3-month minimum.</div>
+        <div class="price-note">Ad spend separate — recommend €400–800/mo. 3-month minimum.</div>
       </div>
     </div>
-    <div class="card" style="margin-top:1.25rem">
+    <div class="card reveal" style="margin-top:1.25rem">
       <div class="info-list">
         <div class="info-item"><span class="info-label">Ad spend</span><span class="info-val">Always paid directly by you to Google or Meta. We never hold your ad budget. You see every transaction and you can pause at any time.</span></div>
         <div class="info-item"><span class="info-label">Contract</span><span class="info-val">Three-month minimum. This is the honest minimum time needed to see meaningful results. Anyone promising overnight leads isn't being straight with you.</span></div>
@@ -698,84 +788,49 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
     </div>
   </div>
   <footer class="site-footer">
-    <div class="footer-grid">
-      <div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div><a href="mailto:kieran@solasagency.ie" class="footer-contact-link">kieran@solasagency.ie</a></div>
-      <div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div>
-      <div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div>
-    </div>
-    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div><a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-ig">@solasagency</a></div>
+    <div class="footer-grid"><div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div></div><div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div><div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div></div>
+    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div></div>
   </footer>
 </div>
 
-<!-- ══════════ CONTACT ══════════ -->
+<!-- ══════ CONTACT ══════ -->
 <div class="page" id="page-contact">
   <div class="page-header">
     <div class="pg-tag">Contact</div>
     <h1 class="pg-h1">Let's talk about<br><em>your pipeline.</em></h1>
-    <p class="pg-sub">Fill in the form and Kieran will get back to you within a few hours to arrange a call. No pitch until we understand your business.</p>
+    <p class="pg-sub">Fill in the form and Kieran will get back to you within a few hours. No pitch until we understand your business.</p>
   </div>
   <div class="content">
     <div class="two-col">
       <div>
-        <div class="card">
-          <!--
-            CONTACT FORM SETUP:
-            1. Go to formspree.io and sign up for free
-            2. Create a new form and copy your form ID
-            3. Replace YOUR_FORM_ID below with your actual ID
-            The form will then send all submissions directly to your email.
-          -->
+        <div class="card reveal">
           <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
             <div class="form-grid">
               <div class="field"><label>Your name *</label><input type="text" name="name" placeholder="John Murphy" required></div>
               <div class="field"><label>Company name</label><input type="text" name="company" placeholder="Murphy Construction"></div>
               <div class="field"><label>Phone number</label><input type="tel" name="phone" placeholder="087 000 0000"></div>
-              <div class="field">
-                <label>County</label>
-                <select name="county">
-                  <option value="">Select county</option>
-                  <option>Cork</option><option>Dublin</option><option>Galway</option>
-                  <option>Limerick</option><option>Waterford</option><option>Kilkenny</option>
-                  <option>Tipperary</option><option>Clare</option><option>Kildare</option>
-                  <option>Wicklow</option><option>Wexford</option><option>Kerry</option>
-                  <option>Meath</option><option>Louth</option><option>Donegal</option>
-                  <option>Mayo</option><option>Sligo</option><option>Other</option>
-                </select>
-              </div>
+              <div class="field"><label>County</label><select name="county"><option value="">Select county</option><option>Cork</option><option>Dublin</option><option>Galway</option><option>Limerick</option><option>Waterford</option><option>Kilkenny</option><option>Tipperary</option><option>Clare</option><option>Kildare</option><option>Wicklow</option><option>Wexford</option><option>Kerry</option><option>Meath</option><option>Louth</option><option>Donegal</option><option>Mayo</option><option>Sligo</option><option>Other</option></select></div>
               <div class="field full"><label>Your email *</label><input type="email" name="email" placeholder="you@example.com" required></div>
               <div class="field full"><label>Where does most of your work come from?</label><textarea name="work_source" placeholder="Word of mouth, referrals, Google..."></textarea></div>
               <div class="field full"><label>What kind of jobs are you looking for more of?</label><textarea name="job_types" placeholder="Extensions, renovations, new builds..."></textarea></div>
             </div>
-            <div style="margin-top:.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-              <button type="submit" class="btn btn-dark" style="width:auto;padding:.75rem 2rem" id="submit-btn">Send message</button>
-            </div>
+            <button type="submit" class="btn btn-dark" style="width:auto;padding:.75rem 2rem;margin-top:.5rem" id="submit-btn">Send message</button>
           </form>
-          <div class="form-success" id="form-success">
-            ✓ &nbsp;Message sent. Kieran will be in touch within a few hours.
-          </div>
+          <div class="form-success" id="form-success">✓ &nbsp;Message sent. Kieran will be in touch within a few hours.</div>
         </div>
       </div>
       <div>
-        <div class="widget">
+        <div class="widget reveal">
           <div class="widget-head">Direct contact</div>
           <div class="widget-body">
             <div class="info-list">
-              <div class="info-item" style="padding:.75rem 0">
-                <span class="info-label">Email</span>
-                <a href="mailto:kieran@solasagency.ie" style="font-size:.875rem;color:var(--gold);text-decoration:none">kieran@solasagency.ie</a>
-              </div>
-              <div class="info-item" style="padding:.75rem 0">
-                <span class="info-label">Instagram</span>
-                <a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" style="font-size:.875rem;color:var(--ink-2);text-decoration:none">@solasagency</a>
-              </div>
-              <div class="info-item" style="padding:.75rem 0;border:none">
-                <span class="info-label">Founder</span>
-                <span style="font-size:.875rem;color:var(--ink-2)">Kieran Morrissey</span>
-              </div>
+              
+              
+              <div class="info-item" style="padding:.75rem 0;border:none"><span class="info-label">Founder</span><span style="font-size:.875rem;color:var(--ink-2)">Kieran Morrissey</span></div>
             </div>
           </div>
         </div>
-        <div class="widget">
+        <div class="widget reveal" style="transition-delay:.1s">
           <div class="widget-head">What happens next</div>
           <div class="widget-body">
             <div class="info-list">
@@ -789,58 +844,92 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--ink);font-fa
     </div>
   </div>
   <footer class="site-footer">
-    <div class="footer-grid">
-      <div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div><a href="mailto:kieran@solasagency.ie" class="footer-contact-link">kieran@solasagency.ie</a></div>
-      <div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div>
-      <div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div>
-    </div>
-    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div><a href="https://www.instagram.com/solasagency/" target="_blank" rel="noopener" class="footer-ig">@solasagency</a></div>
+    <div class="footer-grid"><div><div class="footer-logo">Solas<span>.</span></div><div class="footer-tagline">Lead generation for Irish builders and tradesmen.</div></div><div><div class="footer-heading">Pages</div><div class="footer-nav"><button onclick="go('home',document.querySelectorAll('.nav-btn')[0])">Home</button><button onclick="go('about',document.querySelectorAll('.nav-btn')[1])">About</button><button onclick="go('services',document.querySelectorAll('.nav-btn')[2])">Services</button><button onclick="go('process',document.querySelectorAll('.nav-btn')[3])">How it works</button><button onclick="go('pricing',document.querySelectorAll('.nav-btn')[4])">Pricing</button></div></div><div><div class="footer-heading">Get started</div><div class="footer-nav"><button onclick="go('contact',document.querySelectorAll('.nav-btn')[5])">Book a free call</button></div></div></div>
+    <div class="footer-bottom"><div class="footer-copy">© 2026 Solas Agency. All rights reserved.</div></div>
   </footer>
 </div>
 
 </main>
 
 <script>
-function go(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  if (el) el.classList.add('active');
-  window.scrollTo(0, 0);
-  if (window.innerWidth <= 960) document.getElementById('sb').classList.remove('open');
+// ── CURSOR ──
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
 }
-function toggleSB() {
-  document.getElementById('sb').classList.toggle('open');
-}
-function toggleAcc(el) {
-  el.classList.toggle('open');
+animRing();
+document.querySelectorAll('button,a,.svc-card,.step,.accordion,.ps-point,.price-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.classList.add('expand');ring.classList.add('expand')});
+  el.addEventListener('mouseleave',()=>{cur.classList.remove('expand');ring.classList.remove('expand')});
+});
+
+// ── RIPPLE on nav buttons ──
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',function(e){
+    const r=document.createElement('span');
+    const rect=this.getBoundingClientRect();
+    const size=Math.max(rect.width,rect.height);
+    r.className='ripple';
+    r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+    this.appendChild(r);
+    setTimeout(()=>r.remove(),700);
+  });
+});
+
+// ── PAGE TRANSITIONS ──
+const overlay=document.getElementById('overlay');
+function go(id,el){
+  overlay.className='transition-overlay in';
+  setTimeout(()=>{
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('page-'+id).classList.add('active');
+    if(el)el.classList.add('active');
+    window.scrollTo(0,0);
+    if(window.innerWidth<=960)document.getElementById('sb').classList.remove('open');
+    initReveal();
+    overlay.className='transition-overlay out';
+    setTimeout(()=>overlay.className='transition-overlay',450);
+  },350);
 }
 
-// Contact form — works with Formspree
-const form = document.getElementById('contact-form');
-if (form) {
-  form.addEventListener('submit', async function(e) {
+// ── ACCORDION ──
+function toggleAcc(el){el.classList.toggle('open')}
+
+// ── SCROLL REVEAL ──
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+  },{threshold:.12});
+  document.querySelectorAll('.page.active .reveal,.page.active .reveal-left,.page.active .reveal-right').forEach(el=>{
+    el.classList.remove('visible');obs.observe(el);
+  });
+}
+initReveal();
+
+// ── MOBILE SIDEBAR ──
+function toggleSB(){document.getElementById('sb').classList.toggle('open')}
+
+// ── CONTACT FORM ──
+const form=document.getElementById('contact-form');
+if(form){
+  form.addEventListener('submit',async function(e){
     e.preventDefault();
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-    try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json' }
-      });
-      if (res.ok) {
-        form.style.display = 'none';
-        document.getElementById('form-success').style.display = 'block';
-      } else {
-        btn.disabled = false;
-        btn.textContent = 'Try again';
-      }
-    } catch {
-      btn.disabled = false;
-      btn.textContent = 'Try again';
-    }
+    const btn=document.getElementById('submit-btn');
+    btn.disabled=true;btn.textContent='Sending...';
+    try{
+      const res=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}});
+      if(res.ok){form.style.display='none';document.getElementById('form-success').style.display='block';}
+      else{btn.disabled=false;btn.textContent='Try again';}
+    }catch{btn.disabled=false;btn.textContent='Try again';}
   });
 }
 </script>
